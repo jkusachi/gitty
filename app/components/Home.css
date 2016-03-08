@@ -1,6 +1,7 @@
 .wrapper{
   width: calc(100% - 280px);
   position: relative;
+  margin-bottom: 100px;
 
 }
 
@@ -26,7 +27,7 @@
 }
 
 .container .desc{
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 300;
 }
 
@@ -40,6 +41,7 @@
 
 .container button{
   background: #F45B69;
+  font-family: "Lato Medium";
   color: white;
   padding:  20px 30px;
   border: 1px solid #844B51;
@@ -49,10 +51,20 @@
   margin: 25px 0;
 }
 
+
+
+
+
 .container button:hover{
   background: #D63543;
 }
 
 .container button:active{
   background: #028090;
+  border: 1px solid #028090;
+}
+
+.container button.clearButton:hover,
+.container button.clearButton:active{
+  color: white;
 }

@@ -3,7 +3,7 @@
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-var path = require('path');
+const path = require('path');
 
 const electron = require('electron');
 const app = electron.app;
@@ -55,7 +55,7 @@ app.on('ready', () => {
 
   if(!hasSetup){
 
-    mainWindow = new BrowserWindow({ width: 800, height: 650, frame: true });
+    mainWindow = new BrowserWindow({ width: 800, height: 850, frame: false });
 
     mainWindow.loadURL(`file://${__dirname}/app/app.html`);
 

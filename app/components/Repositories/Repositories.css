@@ -1,0 +1,48 @@
+
+
+.container{
+  background: white;
+  color: #114B5F;
+  font-weight: 300;
+  padding: 20px;
+  display: inline-block;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: left;
+}
+
+
+.container label{
+  text-align: center;
+  display: block;
+  font-weight: 800;
+  border-bottom: 1px solid #CCC;
+}
+
+.container ul{
+  margin: 0;
+  padding: 0;
+}
+
+.container li{
+  padding: 10px;
+  margin: 5px 0;
+  font-weight: 400;
+  background: #E8E8E8;
+  border-radius: 10px;
+}
+
+
+.container button.clearButton{
+  background: white;
+  color: #F45B69;
+  padding: 10px;
+  font-size: 14px;
+  display: block;
+  margin: 20px auto;
+}
+
+.container button.clearButton:hover,
+.container button.clearButton:active{
+  background: #FAFAFA;
+}

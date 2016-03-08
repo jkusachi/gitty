@@ -7,6 +7,8 @@ import { routerMiddleware } from 'react-router-redux';
 import rootReducer from '../reducers';
 import DevTools from '../containers/DevTools';
 
+import request from '../utils/request';
+
 const logger = createLogger({
   level: 'info',
   collapsed: true,
@@ -15,7 +17,7 @@ const logger = createLogger({
 const router = routerMiddleware(hashHistory);
 
 const enhancer = compose(
-  applyMiddleware(thunk, router, logger),
+  applyMiddleware(thunk, router, logger, request),
   DevTools.instrument(),
   persistState(
     window.location.href.match(

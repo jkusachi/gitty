@@ -1,31 +1,51 @@
+'use strict';
+
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import styles from './Home.css';
+import path from 'path';
+import {remote} from 'electron';
 
-const dialog = require('electron').remote.dialog;
+import _ from 'lodash';
 
-var path = require('path');
+import Repositories from './Repositories/Repositories';
 
-console.log('styles ', styles);
+var {dialog} = remote;
 
-export default class Home extends Component {
+class Home extends Component {
+
+  constructor(props){
+    super(props);
+    this.getRepos();
+  }
+
+  getRepos(){
+    var { getRepositories } = this.props;
+    getRepositories();
+  }
 
   onClick(){
-    console.log('clicked');
+    var { saveRepositories } = this.props;
     dialog.showOpenDialog({
       properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
     }, function(pathArray){
-      let path = pathArray[0];
-      console.log('path is ', path);
+      saveRepositories(pathArray);
     });
   }
 
+  onClear(){
+    console.log('clearing');
+    var { clearRepositories } = this.props;
+    clearRepositories();
+  }
+
   render() {
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div className={styles.image}>
-            <img src="../images/gitty-icon-color.png"  width="250" />
+            <img src="../images/gitty-icon-color.png"  width="200" />
           </div>
 
           <strong className={styles.title}>Gitty!</strong>
@@ -36,7 +56,11 @@ export default class Home extends Component {
 
           <button onClick={this.onClick.bind(this)}>Add Repositories</button>
 
-          <p className={styles.credits}>By James</p>
+          <Repositories
+            onClear={this.onClear.bind(this)}
+            items={this.props.setup.repos}
+           />
+          <p  className={styles.credits}>By James</p>
 
         </div>
       </div>
@@ -44,3 +68,5 @@ export default class Home extends Component {
   }
 }
 
+
+export default Home;

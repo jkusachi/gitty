@@ -93,8 +93,10 @@
   "dependencies": {
     "css-modules-require-hook": "^3.0.0",
     "electron-debug": "^0.5.2",
+    "electron-json-storage": "^2.0.0",
     "font-awesome": "^4.4.0",
     "lato-font": "^1.1.1",
+    "lodash": "^4.6.1",
     "menubar": "^4.0.2",
     "postcss": "^5.0.18",
     "react": "^0.14.2",
