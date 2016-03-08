@@ -1,14 +1,50 @@
+.wrapper{
+  width: calc(100% - 280px);
+  position: relative;
+
+}
+
 .container {
-  position: absolute;
-  top: 30%;
-  left: 10px;
+  width: 100%;
   text-align: center;
+  padding: 20px 0 0 20px;
+}
+
+.container .title{
+  color: white;
+  font-size: 24px;
+  font-weight: 300;
+  border-bottom: 1px solid #E4FDE1
 }
 
 .container h2 {
   font-size: 5rem;
 }
 
+.container p{
+
+}
+
+.container .desc{
+  font-size: 18px;
+  font-weight: 300;
+}
+
 .container a {
   font-size: 1.4rem;
+}
+
+.container .credits{
+  font-size: 13px;
+}
+
+.container button{
+  background: #F45B69;
+  color: white;
+  padding:  20px 30px;
+  border: 1px solid #844B51;
+  border-radius: 5px;
+  font-size: 24px;
+  outline:0;
+  margin: 25px 0;
 }
