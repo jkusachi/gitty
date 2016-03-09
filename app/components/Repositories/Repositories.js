@@ -20,7 +20,7 @@ class Home extends Component {
   renderRepos(){
     return (
       <div className={styles.container}>
-        <label>Currently Watched Repositories</label>
+        <label className={styles.jeff}>Currently Watched Repositories</label>
         <ul>
           {_.map(this.props.items, (item)=> {
             return (<li className="item">{item}</li>);

@@ -56,10 +56,15 @@ class Home extends Component {
 
           <button onClick={this.onClick.bind(this)}>Add Repositories</button>
 
+          <If condition={!_.isEmpty(this.props.setup.repos)}>
+            <button className={styles.start}>Start er' up</button>
+          </If>
+
           <Repositories
             onClear={this.onClear.bind(this)}
             items={this.props.setup.repos}
            />
+
           <p  className={styles.credits}>By James</p>
 
         </div>

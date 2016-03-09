@@ -15,7 +15,6 @@ export default function({getState, dispatch}){
     switch(action.type){
 
       case ActionTypes.GET_REPOSITORIES:
-        var data = storage.get('repositories');
 
         storage.get('repositories', function(err, data){
           if(err) throw err;
@@ -29,7 +28,6 @@ export default function({getState, dispatch}){
       case ActionTypes.SAVE_REPOSITORIES:
         dispatch(setupActions.setLoading());
         storage.set('repositories', action.data);
-        console.log('saving data ', action.data);
         dispatch(setupActions.finishLoading());
         break;
     }

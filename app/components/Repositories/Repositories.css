@@ -1,5 +1,4 @@
 
-
 .container{
   background: white;
   color: #114B5F;
@@ -19,6 +18,7 @@
   border-bottom: 1px solid #CCC;
 }
 
+
 .container ul{
   margin: 0;
   padding: 0;
@@ -33,7 +33,7 @@
 }
 
 
-.container button.clearButton{
+.container .clearButton{
   background: white;
   color: #F45B69;
   padding: 10px;

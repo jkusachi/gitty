@@ -49,11 +49,15 @@
   font-size: 24px;
   outline:0;
   margin: 25px 0;
+  display: inline-block;
+  margin: 30px auto;
 }
 
-
-
-
+.container .start{
+  border: 1px solid #226D22;
+  color: #226D22;
+  background: #92F492;
+}
 
 .container button:hover{
   background: #D63543;
