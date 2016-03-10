@@ -39,6 +39,12 @@ export function saveRepositories(repos){
   };
 }
 
+export function saveStatus(status){
+  return {
+    type: ActionTypes.SAVE_STATUS,
+    data: status
+  }
+}
 
 export function reset(){
   return {

@@ -1,6 +1,7 @@
 
 html,body{
   background: #456990;
+  margin: 0;
 }
 
 html {
@@ -37,3 +38,4 @@ a:hover {
   text-decoration: none;
   cursor: pointer;
 }
+

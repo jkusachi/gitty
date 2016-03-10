@@ -1,5 +1,6 @@
 
 import {
+  SAVE_STATUS,
   CLEAR_REPOSITORIES,
   GET_REPOSITORIES,
   SAVE_REPOSITORIES,
@@ -8,6 +9,7 @@ import {
 }
 from '../constants/ActionTypes';
 
+import update from 'react-addons-update';
 import _ from 'lodash';
 
 const initialState = {
@@ -26,14 +28,25 @@ export default function repositories(state = initialState, action){
     case CLEAR_REPOSITORIES:
       return Object.assign({}, state, {repos: null });
 
+    case SAVE_STATUS:
+      var status = action.data.status;
+
+      return update(state, {
+        repos: {
+          [action.data.index]: {
+            $merge: {
+              status: status
+            }
+          }
+        }
+      });
+
     case SAVE_REPOSITORIES:
 
-      if(_.isEmpty(state.repos)){
-        var newList = _.map(action.data, (item) => _.create({},{ path: item}) );
-      }
-      else{
-        var newList = (state.repos || []).concat(  _.create({},{ path: action.data }) );
-      }
+      var newList = state.repos.concat ( _.map(action.data, function(item){
+        return _.create({},{ path: item});
+      }) );
+
       return Object.assign({}, state, {
         repos: newList
       });

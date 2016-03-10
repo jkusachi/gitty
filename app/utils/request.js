@@ -34,10 +34,26 @@ export default function({getState, dispatch}){
       case ActionTypes.SAVE_REPOSITORIES:
         dispatch(repositoryActions.setLoading());
 
-        storage.set('repositories', action.data, function(err,data){
-          dispatch(repositoryActions.finishLoading());
-        });
+        console.log('in save ', action.data );
 
+        storage.has('repositories', function(err,hasKey){
+
+          if(err) throw err;
+
+          if(hasKey){
+            storage.get('repositories', function(err,data){
+              var newStorage = data.concat(action.data);
+              storage.set('repositories', newStorage, function(err,data){
+                if(err) throw err;
+                dispatch(repositoryActions.finishLoading());
+              });
+            });
+          }else{
+            storage.set('repositories', action.data, function(err,data){
+              dispatch(repositoryActions.finishLoading());
+            });
+          }
+        });
         break;
     }
 

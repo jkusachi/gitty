@@ -16,13 +16,11 @@ export default class RepositoryList extends Component {
   constructor(props){
     super(props);
 
-    var { getRepositories } = this.props;
+    var { getRepositories, saveStatus } = this.props;
     getRepositories();
 
     ipcRenderer.on('statusUpdate', (evt,message) => {
-      console.log('props', this.props);
-
-      console.log('we got an update ', message)
+      saveStatus(message);
     });
 
   }
