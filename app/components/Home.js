@@ -9,6 +9,7 @@ import path from 'path';
 import {remote} from 'electron';
 import _ from 'lodash';
 
+
 import Repositories from './Repositories/Repositories';
 
 import storage from 'electron-json-storage';

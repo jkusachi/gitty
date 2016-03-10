@@ -19,8 +19,12 @@ export default class RepositoryList extends Component {
     var { getRepositories } = this.props;
     getRepositories();
 
-    // var win = remote.getCurrentWindow();
-    // win.setSize(600,  700 );
+    ipcRenderer.on('statusUpdate', (evt,message) => {
+      console.log('props', this.props);
+
+      console.log('we got an update ', message)
+    });
+
   }
 
   onClear(){

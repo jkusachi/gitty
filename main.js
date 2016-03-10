@@ -5,6 +5,9 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 const path = require('path');
 
+var Job = require('./jobs/jobs');
+var RepositoryProcess = require('./process/RepositoryProcess');
+
 const electron = require('electron');
 const app = electron.app;
 const ipc = electron.ipcMain;
@@ -30,6 +33,9 @@ var isWindows = (process.platform === 'win32');
 crashReporter.start();
 
 const hasSetup = false;
+
+var job = new Job();
+var repoProcess = new RepositoryProcess();
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
@@ -73,7 +79,7 @@ var loadSetup = function(event){
     cornerWindow.close();
   }
 
-  mainWindow = new BrowserWindow({ width: 800, height: 850, frame: true });
+  mainWindow = new BrowserWindow({ width: 800, height: 850, frame: false });
 
   mainWindow.loadURL(`file://${__dirname}/app/app.html`);
 
@@ -88,7 +94,7 @@ var loadSetup = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    //mainWindow.openDevTools();
+    mainWindow.openDevTools();
   }
 
 }
@@ -112,6 +118,7 @@ var start = function(event){
   console.log('menu click ', e, arguments);
  })
 
+  //create the corner window
   cornerWindow = new BrowserWindow({
     width: 600,
     height: 200,
@@ -131,9 +138,18 @@ var start = function(event){
   var positioner = new Positioner(cornerWindow);
   positioner.move('topRight');
 
+  cornerWindow.on('closed', () => {
+    job.stop();
+  })
+
+  storage.get('repositories', function(err,data){
+    var paths = data;
+    repoProcess.set(paths, cornerWindow);
+    job.set( repoProcess.getStatus() );
+    job.start(3000);
+  });
+
 }
-
-
 
 
 ipc.on('setup', loadSetup);
