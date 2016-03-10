@@ -4,16 +4,16 @@ import { bindActionCreators } from 'redux';
 import Home from '../components/Home';
 
 import { connect } from 'react-redux';
-import * as SetupActions  from '../actions/setup';
+import * as RepositoryActions  from '../actions/repositories';
 
 function mapStateToProps(state){
   return {
-    setup: state.setup
+    repositories: state.repositories
   };
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators(SetupActions, dispatch);
+  return bindActionCreators(RepositoryActions, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

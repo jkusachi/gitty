@@ -72,7 +72,7 @@ class Home extends Component {
           <div className={styles.buttons}>
             <button onClick={this.onClick.bind(this)}>Add Repositories</button>
 
-            <If condition={!_.isEmpty(this.props.setup.repos)}>
+            <If condition={!_.isEmpty(this.props.repositories.repos)}>
               <button onClick={this.startUp.bind(this)} className={styles.start}>Start er' up</button>
             </If>
           </div>
@@ -81,7 +81,7 @@ class Home extends Component {
 
           <Repositories
                 onClear={this.onClear.bind(this)}
-                items={this.props.setup.repos}
+                items={this.props.repositories.repos}
                />
 
           <p  className={styles.credits}>By James</p>

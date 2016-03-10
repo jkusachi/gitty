@@ -1,7 +1,6 @@
 
 import {ipcRenderer} from 'electron';
 
-import * as setupActions from '../actions/setup';
 import * as ActionTypes from '../constants/ActionTypes';
 import storage from 'electron-json-storage';
 import _ from 'lodash';

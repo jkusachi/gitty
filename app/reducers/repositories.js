@@ -13,7 +13,8 @@ const initialState = {
   isLoading: false
 };
 
-export default function setup(state = initialState, action){
+
+export default function repositories(state = initialState, action){
 
   switch(action.type){
 
