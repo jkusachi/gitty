@@ -1,0 +1,67 @@
+body{
+  background: #FFF;
+  margin: 4px;
+  padding: 0;
+}
+
+
+.mainActions{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  font-size: 10px;
+}
+
+
+/** List Item
+ */
+
+.listItem{
+  background: #456990;
+  border-bottom: 1px solid #999;
+  display: flex;
+  color: #e8e8e8;
+  text-shadow: 0px 1px 1px #333;
+  font-weight: bold;
+  padding:15px;
+  flex-direction: row;
+  align-content: center;
+}
+
+label{
+  align-self: center;
+  padding-left: 20px;
+  font-weight: 300;
+}
+
+.buttons{
+
+}
+
+.mainActions button,
+.listItem button{
+  font-size: 20px;
+  background: #F45B69;
+  color: #FFF;
+  border-width: 0;
+  border-radius: 5px;
+  outline: 0;
+  box-shadow: 0px 1px 1px #666;
+  padding: 6px 10px;
+  font-size: 15px;
+  margin: 0 10px 0 0;
+  text-shadow: 0px 1px 1px #333;
+  font-weight: 300;
+}
+
+.buttons .fetch{
+  background: #5BB3F4;
+}
+
+.buttons .pull{
+
+}
+
+.listItem:nth-child(odd){
+  background: #4779B0;
+}

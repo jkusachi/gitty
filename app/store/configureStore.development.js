@@ -8,6 +8,8 @@ import rootReducer from '../reducers';
 import DevTools from '../containers/DevTools';
 
 import request from '../utils/request';
+import flow from '../utils/flow';
+
 
 const logger = createLogger({
   level: 'info',
@@ -17,7 +19,7 @@ const logger = createLogger({
 const router = routerMiddleware(hashHistory);
 
 const enhancer = compose(
-  applyMiddleware(thunk, router, logger, request),
+  applyMiddleware(thunk, router, logger, request, flow),
   DevTools.instrument(),
   persistState(
     window.location.href.match(

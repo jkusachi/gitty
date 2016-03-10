@@ -25,6 +25,7 @@ export function getRepositories(){
   }
 }
 
+
 export function clearRepositories(){
   return {
     type: ActionTypes.CLEAR_REPOSITORIES
@@ -35,5 +36,12 @@ export function saveRepositories(repos){
   return {
     type: ActionTypes.SAVE_REPOSITORIES,
     data: repos
+  };
+}
+
+
+export function reset(){
+  return {
+    type: ActionTypes.RESET
   };
 }

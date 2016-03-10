@@ -1,11 +1,13 @@
 
-body {
-  position: relative;
-  color: white;
-  height: 100vh;
-  background-color: #456990;
-  font-family: "Lato", Arial, Helvetica, Helvetica Neue;
-  font-weight: 300;
+html,body{
+  background: #456990;
+}
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 h2 {
