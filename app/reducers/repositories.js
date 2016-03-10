@@ -8,6 +8,8 @@ import {
 }
 from '../constants/ActionTypes';
 
+import _ from 'lodash';
+
 const initialState = {
   repos: [],
   isLoading: false
@@ -25,7 +27,13 @@ export default function repositories(state = initialState, action){
       return Object.assign({}, state, {repos: null });
 
     case SAVE_REPOSITORIES:
-      let newList = (state.repos || []).concat(action.data);
+
+      if(_.isEmpty(state.repos)){
+        var newList = _.map(action.data, (item) => _.create({},{ path: item}) );
+      }
+      else{
+        var newList = (state.repos || []).concat(  _.create({},{ path: action.data }) );
+      }
       return Object.assign({}, state, {
         repos: newList
       });

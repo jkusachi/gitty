@@ -22,7 +22,7 @@ export default class RepositoryListItem extends Component {
             <button className={styles.pull}>pull</button>
           </div>
           <label>
-            {this.props.data}
+            {this.props.data.path }
           </label>
       </div>
     );

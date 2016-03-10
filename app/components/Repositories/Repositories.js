@@ -23,7 +23,7 @@ class Home extends Component {
         <label>Currently Watched Repositories</label>
         <ul>
           {_.map(this.props.items, (item)=> {
-            return (<li className="item">{item}</li>);
+            return (<li className="item">{item.path}</li>);
           })}
         </ul>
 
