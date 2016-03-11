@@ -69,6 +69,7 @@ label{
 
 .buttons{}
 
+.addRepository button,
 .mainActions button,
 .listItem button{
   font-size: 20px;
@@ -83,6 +84,17 @@ label{
   margin: 0 10px 0 0;
   text-shadow: 0px 1px 1px #333;
   font-weight: 300;
+}
+
+.addRepository{
+  margin-top: 10px;
+  padding-left: 10px;
+}
+.addRepository button{
+  background: linear-gradient(#E4FDE1,#B5C9B2);
+  color: black;
+  text-shadow: none;
+  font-weight: 400;
 }
 
 .buttons .fetch{

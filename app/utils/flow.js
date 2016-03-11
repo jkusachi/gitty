@@ -15,8 +15,10 @@ export default function({getState, dispatch}){
     switch(action.type){
 
       case ActionTypes.RESET:
-        console.log('ipc render clear');
         ipcRenderer.send('setup')
+
+      case ActionTypes.ADD_REPOSITORIES:
+        ipcRenderer.send('resizeCornerWindow');
     }
 
     return returnValue;

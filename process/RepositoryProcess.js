@@ -14,25 +14,36 @@ class RepositoryProcess {
 
   }
 
-  set(paths, renderWindow){
-    this.paths = paths;
+  set(renderWindow){
     this.window = renderWindow;
   }
 
   getStatus(){
     return () => {
-      console.log('gettings tatus');
-      _.map(this.paths, (repoPath, index) => {
-         simpleGit( path.resolve(repoPath))
-        .status((err, status)=>{
+      var self = this;
 
-          //send status update
-          this.window.webContents.send('statusUpdate', {
-            index: index,
-            status: status
+      storage.get('repositories', function(err, data){
+        if(err) throw err;
+
+        console.log('got data ', data);
+
+        _.map(data, (repoPath, index) => {
+          console.log('processing ', repoPath);
+
+          if(!repoPath) return;
+
+           simpleGit( path.resolve(repoPath))
+          .status((err, status)=>{
+
+            //send status update
+            self.window.webContents.send('statusUpdate', {
+              index: index,
+              status: status
+            });
           });
-        });
-      })
+        })
+
+      });
     }
   }
 

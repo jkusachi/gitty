@@ -32,7 +32,8 @@ var isWindows = (process.platform === 'win32');
 
 crashReporter.start();
 
-const ITEM_HEIGHT = 75;
+const ITEM_HEIGHT = 60;
+const ITEM_HEIGHT_EXTRAS = 45;
 const hasSetup = false;
 
 var job = new Job();
@@ -155,9 +156,9 @@ var start = function(event){
   storage.get('repositories', function(err,data){
     var paths = data;
 
-    cornerWindow.setSize(600, paths.length * ITEM_HEIGHT);
+    cornerWindow.setSize(600, paths.length * ITEM_HEIGHT + ITEM_HEIGHT_EXTRAS);
 
-    repoProcess.set(paths, cornerWindow);
+    repoProcess.set(cornerWindow);
     job.set( repoProcess.getStatus() );
     job.start(5000);
   });
@@ -167,3 +168,11 @@ var start = function(event){
 ipc.on('setup', loadSetup);
 
 ipc.on('start', start);
+
+ipc.on('resizeCornerWindow', function(event){
+  console.log('resizeCornerWindow');
+  storage.get('repositories', function(err,data){
+    var paths = data;
+    cornerWindow.setSize(600, paths.length * ITEM_HEIGHT + ITEM_HEIGHT_EXTRAS);
+  });
+})

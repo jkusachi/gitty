@@ -30,11 +30,18 @@ class Home extends Component {
   }
 
   onClick(){
-    var { saveRepositories } = this.props;
+    var {repositories, saveRepositories, addRepositories } = this.props;
+
+    var {repos} = repositories;
+
     dialog.showOpenDialog({
       properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
     }, function(pathArray){
-      saveRepositories(pathArray);
+      if(repos && repos.length > 0){
+        addRepositories(pathArray);
+      }else {
+        saveRepositories(pathArray);
+      }
     });
   }
 
@@ -56,6 +63,11 @@ class Home extends Component {
 
   render() {
 
+    var {repositories} = this.props;
+    var {repos} = repositories;
+
+    var addLabel = (repos && repos.length > 0) ? 'Add More' : 'Add Repositories';
+
     return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
@@ -69,7 +81,9 @@ class Home extends Component {
           it's your call.  </p>
 
           <div className={styles.buttons}>
-            <button onClick={this.onClick.bind(this)}>Add Repositories</button>
+            <button onClick={this.onClick.bind(this)}>
+              {addLabel}
+            </button>
 
             <If condition={!_.isEmpty(this.props.repositories.repos)}>
               <button onClick={this.startUp.bind(this)} className={styles.start}>Start er' up</button>

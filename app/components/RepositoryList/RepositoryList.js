@@ -29,11 +29,11 @@ export default class RepositoryList extends Component {
 
   onAddRepository(){
 
-    var { saveRepositories } = this.props;
+    var { addRepositories } = this.props;
     dialog.showOpenDialog({
       properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
     }, function(pathArray){
-      saveRepositories(pathArray);
+      addRepositories(pathArray);
     });
 
   }
@@ -54,7 +54,7 @@ export default class RepositoryList extends Component {
         </If>
 
         <div className={styles.addRepository}>
-          <button onClick={this.onAddRepository.bind(this)}>+</button>
+          <button onClick={this.onAddRepository.bind(this)}>+ add repository</button>
         </div>
 
         <div className={styles.mainActions}>
