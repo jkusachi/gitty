@@ -47,6 +47,13 @@ export function saveRepositories(repos){
   };
 }
 
+export function removeRepository(index){
+  return {
+    type: ActionTypes.REMOVE_REPOSITORY,
+    data: index
+  };
+}
+
 export function saveStatus(status){
   return {
     type: ActionTypes.SAVE_STATUS,

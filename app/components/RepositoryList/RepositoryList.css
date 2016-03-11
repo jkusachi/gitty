@@ -67,7 +67,10 @@ label{
 /** Buttons
  */
 
-.buttons{}
+.buttons{
+  margin-left: auto;
+  align-self: center;
+}
 
 .addRepository button,
 .mainActions button,
@@ -117,7 +120,9 @@ label{
   display: flex;
   align-content: center;
   padding-left: 10px;
-  margin-left: auto;
+  text-align: center;
+  justify-content: center;
+  width: 100px;
 }
 
 .listItem .status div{
@@ -127,3 +132,19 @@ label{
 .listItem .ahead{}
 
 .listItem .behind{}
+
+.listItem .actions{
+  align-self: center;
+  margin-left: 20px;
+}
+
+.listItem .actionButton{
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.listItem .actions:hover,
+.listItem .actions:active{
+  background: #882525;
+  color: white;
+}

@@ -30,6 +30,7 @@ export default class RepositoryListItem extends Component {
     }else{
       health = 'flu';
     }
+
     return (
       <div className={cx(styles.listItem, styles[health])}>
 
@@ -41,23 +42,27 @@ export default class RepositoryListItem extends Component {
             </div>
           </div>
 
+          <div className={styles.buttons}>
+            <If condition={health !== 'healthy'}>
+              <button className={styles.pull}>git pull</button>
+            </If>
+          </div>
+
           <div className={styles.status}>
             <If condition={health === 'healthy'}>
               <div className={styles.upToDate}>
                 <span>Up to Date!</span>
               </div>
             <Else/>
-              <div className={styles.buttons}>
-                <button className={styles.pull}>git pull</button>
-              </div>
-
               <div className={styles.ahead}>+{ahead}</div>
                 <div className={styles.divider}>/</div>
               <div className={styles.behind}>-{behind}</div>
-
             </If>
-
           </div>
+          <div className={styles.actions}>
+            <i className={cx(styles.actionButton, "fa fa-trash")}></i>
+          </div>
+
       </div>
     );
   }

@@ -86,7 +86,7 @@ class Home extends Component {
             </button>
 
             <If condition={!_.isEmpty(this.props.repositories.repos)}>
-              <button onClick={this.startUp.bind(this)} className={styles.start}>Start er' up</button>
+              <button onClick={this.startUp.bind(this)} className={styles.start}>Gitty Up</button>
             </If>
           </div>
 

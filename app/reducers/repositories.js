@@ -1,5 +1,6 @@
 
 import {
+  REMOVE_REPOSITORY,
   ADD_REPOSITORIES,
   SAVE_STATUS,
   CLEAR_REPOSITORIES,
@@ -59,6 +60,15 @@ export default function repositories(state = initialState, action){
       return Object.assign({}, state, {
         repos: newList
       });
+
+    case REMOVE_REPOSITORY:
+
+      //action.data is the index to be removed
+      return update(state, {
+        repos: {
+          $splice: [ [action.data, 1] ]
+        }
+      })
 
     case SET_LOADING:
       return Object.assign({}, state, { isLoading: true });
