@@ -41,9 +41,7 @@ export default function({getState, dispatch}){
           if(err) throw err;
 
           var deleteIndex = action.data;
-          console.log('before ', data);
           data.splice(deleteIndex, 1);
-          console.log('after ', data);
           storage.set('repositories', data, function(err,data){
             console.log('saved...', data);
           });

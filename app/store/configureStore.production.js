@@ -4,9 +4,12 @@ import { hashHistory } from 'react-router';
 import { routerMiddleware } from 'react-router-redux';
 import rootReducer from '../reducers';
 
+import request from '../utils/request';
+import flow from '../utils/flow';
+
 const router = routerMiddleware(hashHistory);
 
-const enhancer = applyMiddleware(thunk, router);
+const enhancer = applyMiddleware(thunk, router, request, flow);
 
 export default function configureStore(initialState) {
   return createStore(rootReducer, initialState, enhancer);

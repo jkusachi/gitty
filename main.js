@@ -47,7 +47,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+  console.log('all closed');
+  //if (process.platform !== 'darwin') app.quit();
+
+  app.quit();
 });
 
 app.on('ready', () => {
@@ -119,11 +122,30 @@ var start = function(event){
   appIcon = new Tray( path.join( __dirname, '/images/gitty-icon-50.png' ));
 
    var contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' }
+    {
+      label: 'Sync',
+      type: 'radio'
+    },
+    {
+      label: 'Add Repository',
+      type: 'radio' },
+    {
+      label: 'Quit',
+      type: 'radio',
+      click: function(item, focusedWindow){
+        cornerWindow.close();
+        if(mainWindow){
+          mainWindow.close();
+        }
+        cornerWindow = null;
+        appIcon.destroy();
+
+      }
+    }
   ]);
+
+
+  appIcon.setContextMenu(contextMenu)
 
  appIcon.on('click', function(e){
   console.log('menu click ', e, arguments);
@@ -176,3 +198,5 @@ ipc.on('resizeCornerWindow', function(event){
     cornerWindow.setSize(600, paths.length * ITEM_HEIGHT + ITEM_HEIGHT_EXTRAS);
   });
 })
+
+
