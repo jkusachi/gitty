@@ -32,6 +32,14 @@ export function clearRepositories(){
   };
 }
 
+export function addRepositories(repos){
+  return {
+    type: ActionTypes.ADD_REPOSITORIES,
+    data: repos
+  };
+}
+
+
 export function saveRepositories(repos){
   return {
     type: ActionTypes.SAVE_REPOSITORIES,

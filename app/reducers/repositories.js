@@ -1,5 +1,6 @@
 
 import {
+  ADD_REPOSITORIES,
   SAVE_STATUS,
   CLEAR_REPOSITORIES,
   GET_REPOSITORIES,
@@ -42,6 +43,14 @@ export default function repositories(state = initialState, action){
       });
 
     case SAVE_REPOSITORIES:
+
+      var newList = _.map(action.data, (item) => _.create({},{ path: item}) );
+
+      return Object.assign({}, state, {
+        repos: newList
+      });
+
+    case ADD_REPOSITORIES:
 
       var newList = state.repos.concat ( _.map(action.data, function(item){
         return _.create({},{ path: item});

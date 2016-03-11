@@ -17,12 +17,9 @@ export default function({getState, dispatch}){
 
         storage.get('repositories', function(err, data){
           if(err) throw err;
-          console.log('- storage has data: ', data);
           if(!_.isEmpty(data))
             dispatch(repositoryActions.saveRepositories(data));
         });
-
-        //dispatch(repositoryActions.saveRepositories(data))
         break;
 
       case ActionTypes.CLEAR_REPOSITORIES:
@@ -30,16 +27,18 @@ export default function({getState, dispatch}){
           if(err) throw err;
           dispatch(repositoryActions.reset())
         });
+      break;
 
       case ActionTypes.SAVE_REPOSITORIES:
         dispatch(repositoryActions.setLoading());
+        storage.set('repositories', action.data, function(err,data){
+          dispatch(repositoryActions.finishLoading());
+        });
+      break;
 
-        console.log('in save ', action.data );
-
-        storage.has('repositories', function(err,hasKey){
-
+      case ActionTypes.ADD_REPOSITORIES:
+         storage.has('repositories', function(err,hasKey){
           if(err) throw err;
-
           if(hasKey){
             storage.get('repositories', function(err,data){
               var newStorage = data.concat(action.data);
@@ -54,7 +53,8 @@ export default function({getState, dispatch}){
             });
           }
         });
-        break;
+      break;
+
     }
 
     return returnValue;

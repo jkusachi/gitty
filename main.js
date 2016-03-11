@@ -38,6 +38,9 @@ const hasSetup = false;
 var job = new Job();
 var repoProcess = new RepositoryProcess();
 
+const doKill = false;
+
+
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
 }
@@ -47,6 +50,12 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
+
+  //killswitch
+  if(doKill){
+    storage.remove('repositories');
+    return;
+  }
 
   //appIcon.setToolTip('Gitty');
   //appIcon.setContextMenu(contextMenu);

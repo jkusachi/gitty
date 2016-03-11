@@ -11,6 +11,8 @@ import _ from 'lodash';
 
 import RepositoryListItem from './RepositoryListItem';
 
+const {dialog} = remote;
+
 export default class RepositoryList extends Component {
 
   constructor(props){
@@ -21,6 +23,17 @@ export default class RepositoryList extends Component {
 
     ipcRenderer.on('statusUpdate', (evt,message) => {
       saveStatus(message);
+    });
+
+  }
+
+  onAddRepository(){
+
+    var { saveRepositories } = this.props;
+    dialog.showOpenDialog({
+      properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
+    }, function(pathArray){
+      saveRepositories(pathArray);
     });
 
   }
@@ -39,6 +52,10 @@ export default class RepositoryList extends Component {
             return ( <RepositoryListItem data={item} /> );
           })}
         </If>
+
+        <div className={styles.addRepository}>
+          <button onClick={this.onAddRepository.bind(this)}>+</button>
+        </div>
 
         <div className={styles.mainActions}>
           <button onClick={this.onClear.bind(this)}>clear repositories</button>
