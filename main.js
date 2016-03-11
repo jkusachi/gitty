@@ -105,7 +105,7 @@ var loadSetup = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools();
+    //mainWindow.openDevTools();
   }
 
 }

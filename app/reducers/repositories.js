@@ -33,6 +33,9 @@ export default function repositories(state = initialState, action){
     case SAVE_STATUS:
       var status = action.data.status;
 
+      if(!state.repos[action.data.index])
+        return state;
+
       return update(state, {
         repos: {
           [action.data.index]: {
@@ -62,7 +65,6 @@ export default function repositories(state = initialState, action){
       });
 
     case REMOVE_REPOSITORY:
-
       //action.data is the index to be removed
       return update(state, {
         repos: {

@@ -48,8 +48,8 @@ export default class RepositoryList extends Component {
       <div className={styles.container}>
 
         <If condition={this.props.repositories}>
-          {_.map(this.props.repositories.repos, function(item){
-            return ( <RepositoryListItem data={item} /> );
+          {_.map(this.props.repositories.repos, function(item, index){
+            return ( <RepositoryListItem data={item} key={index} index={index}/> );
           })}
         </If>
 

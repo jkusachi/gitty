@@ -145,6 +145,7 @@ label{
 
 .listItem .actions:hover,
 .listItem .actions:active{
+  border-radius: 5px;
   background: #882525;
   color: white;
 }

@@ -36,6 +36,21 @@ export default function({getState, dispatch}){
         });
       break;
 
+      case ActionTypes.REMOVE_REPOSITORY:
+        storage.get('repositories', function(err,data){
+          if(err) throw err;
+
+          var deleteIndex = action.data;
+          console.log('before ', data);
+          data.splice(deleteIndex, 1);
+          console.log('after ', data);
+          storage.set('repositories', data, function(err,data){
+            console.log('saved...', data);
+          });
+        })
+
+      break;
+
       case ActionTypes.ADD_REPOSITORIES:
          storage.has('repositories', function(err,hasKey){
           if(err) throw err;

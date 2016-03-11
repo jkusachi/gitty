@@ -7,10 +7,20 @@ import path from 'path';
 import _ from 'lodash';
 import cx from 'classnames';
 
-export default class RepositoryListItem extends Component {
+import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
+
+import * as repoActions from '../../actions/repositories' ;
+
+class RepositoryListItem extends Component {
 
   constructor(props){
     super(props);
+  }
+
+  onDeleteRepository() {
+    var {removeRepository} = this.props
+    removeRepository(this.props.index);
   }
 
   render() {
@@ -60,7 +70,7 @@ export default class RepositoryListItem extends Component {
             </If>
           </div>
           <div className={styles.actions}>
-            <i className={cx(styles.actionButton, "fa fa-trash")}></i>
+            <i onClick={this.onDeleteRepository.bind(this)} className={cx(styles.actionButton, "fa fa-trash")}></i>
           </div>
 
       </div>
@@ -69,3 +79,8 @@ export default class RepositoryListItem extends Component {
 
 }
 
+function mapDispatchToProps(dispatch){
+  return bindActionCreators(repoActions, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(RepositoryListItem);
