@@ -205,7 +205,7 @@ var start = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    //cornerWindow.openDevTools();
+    cornerWindow.openDevTools();
   }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
   cornerWindow.show();
@@ -255,6 +255,14 @@ ipc.on('react-app-started', function(event, index){
     })
   }
 });
+
+ipc.on('refreshRepositories', function(evt, index){
+  console.log('refresh reppositor');
+  if(repoProcess){
+    repoProcess.getStatus()();
+  }
+})
+
 
 ipc.on('git-pull', function(event, index){
 

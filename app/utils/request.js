@@ -43,7 +43,7 @@ export default function({getState, dispatch}){
           var deleteIndex = action.data;
           data.splice(deleteIndex, 1);
           storage.set('repositories', data, function(err,data){
-            console.log('saved...', data);
+            dispatch( repositoryActions.resizeCornerWindow() );
           });
         })
 
@@ -58,6 +58,7 @@ export default function({getState, dispatch}){
               storage.set('repositories', newStorage, function(err,data){
                 if(err) throw err;
                 dispatch(repositoryActions.finishLoading());
+                dispatch(repositoryActions.refreshRepositories() );
               });
             });
           }else{

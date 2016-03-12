@@ -64,6 +64,13 @@ export function removeRepository(index){
   };
 }
 
+
+export function refreshRepositories(){
+  return {
+    type: ActionTypes.REFRESH_REPOSITORIES
+  };
+}
+
 export function saveStatus(status){
   return {
     type: ActionTypes.SAVE_STATUS,
@@ -75,4 +82,10 @@ export function reset(){
   return {
     type: ActionTypes.RESET
   };
+}
+
+export function resizeCornerWindow(){
+  return {
+    type: ActionTypes.RESIZE_CORNER_WINDOW
+  }
 }
