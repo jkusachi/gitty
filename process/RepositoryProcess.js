@@ -31,22 +31,26 @@ class RepositoryProcess {
           _.map(data, (repoPath, index) => {
 
             if(!repoPath) return;
-
-             simpleGit( path.resolve(repoPath))
-            .fetch()
-            .status((err, status)=>{
-              if(err) throw err;
-              console.log('---------------------------');
-              console.log('Git Status for: ', repoPath);
-              console.log(status);
-              //send status update
-              if(self.window){
-                self.window.webContents.send('statusUpdate', {
-                  index: index,
-                  status: status
-                });
-              }
-            });
+            try{
+              simpleGit( path.resolve(repoPath))
+              .fetch()
+              .status((err, status)=>{
+                if(err) throw err;
+                console.log('---------------------------');
+                console.log('Git Status for: ', repoPath);
+                console.log(status);
+                //send status update
+                if(self.window){
+                  self.window.webContents.send('statusUpdate', {
+                    index: index,
+                    status: status
+                  });
+                }
+              });
+            }
+            catch(err){
+              console.log('error ', err);
+            }
           })
 
         });

@@ -173,19 +173,6 @@ var start = function(event){
       click: function(){
         cornerWindow.hide();
       }
-    },
-    {
-      label: 'Quit',
-      type: 'radio',
-      click: function(item, focusedWindow){
-        cornerWindow.close();
-        if(mainWindow){
-          mainWindow.close();
-        }
-        cornerWindow = null;
-        appIcon.destroy();
-
-      }
     }
   ]);
 
