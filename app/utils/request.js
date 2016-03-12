@@ -42,8 +42,14 @@ export default function({getState, dispatch}){
 
           var deleteIndex = action.data;
           data.splice(deleteIndex, 1);
-          storage.set('repositories', data, function(err,data){
-            dispatch( repositoryActions.resizeCornerWindow() );
+
+          storage.set('repositories', data, (err, res) =>{
+
+            if(data && data.length === 0){
+              dispatch( repositoryActions.rerunSetup() );
+            }else{
+              dispatch( repositoryActions.resizeCornerWindow() );
+            }
           });
         })
 

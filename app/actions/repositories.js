@@ -65,6 +65,13 @@ export function removeRepository(index){
 }
 
 
+export function rerunSetup(){
+  return {
+    type: ActionTypes.RERUN_SETUP
+  };
+}
+
+
 export function refreshRepositories(){
   return {
     type: ActionTypes.REFRESH_REPOSITORIES

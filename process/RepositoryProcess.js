@@ -15,7 +15,7 @@ class RepositoryProcess {
   }
 
   set(renderWindow){
-    this.window = renderWindow || null;
+  this.window = renderWindow || null;
   }
 
   getStatus(){
@@ -33,8 +33,12 @@ class RepositoryProcess {
             if(!repoPath) return;
 
              simpleGit( path.resolve(repoPath))
+            .fetch()
             .status((err, status)=>{
               if(err) throw err;
+              console.log('---------------------------');
+              console.log('Git Status for: ', repoPath);
+              console.log(status);
               //send status update
               if(self.window){
                 self.window.webContents.send('statusUpdate', {

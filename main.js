@@ -86,7 +86,12 @@ var loadSetup = function(event){
     cornerWindow.close();
   }
 
-  mainWindow = new BrowserWindow({ width: 800, height: 850, frame: false });
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 850,
+    frame: false,
+    title: 'Gitty'
+  });
   mainWindow.loadURL(`file://${__dirname}/app/app.html`);
 
   mainWindow.on('closed', () => {
@@ -187,10 +192,6 @@ var start = function(event){
 
   appIcon.setContextMenu(contextMenu)
 
- appIcon.on('click', function(e){
-  console.log('menu click ', e, arguments);
- })
-
   //create the corner window
   cornerWindow = new BrowserWindow({
     width: 600,
@@ -198,6 +199,7 @@ var start = function(event){
     show: false,
     resizable: true,
     skipTaskbar: true,
+    title: 'Gitty',
     frame: false });
   cornerWindow.on('closed', function(){
      cornerWindow = null;
@@ -205,9 +207,10 @@ var start = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    cornerWindow.openDevTools();
+    //cornerWindow.openDevTools();
   }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
+  cornerWindow.setMenuBarVisibility(false);
   cornerWindow.show();
 
   positioner = new Positioner(cornerWindow);
@@ -257,7 +260,6 @@ ipc.on('react-app-started', function(event, index){
 });
 
 ipc.on('refreshRepositories', function(evt, index){
-  console.log('refresh reppositor');
   if(repoProcess){
     repoProcess.getStatus()();
   }

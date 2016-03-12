@@ -16,17 +16,23 @@ export default function({getState, dispatch}){
 
       case ActionTypes.RESET:
         ipcRenderer.send('setup')
+      break;
 
       case ActionTypes.REFRESH_REPOSITORIES:
-        console.log('ipc send - REFRESH_RESPOSITORIES');
         ipcRenderer.send('refreshRepositories');
+      break;
 
       case ActionTypes.ADD_REPOSITORIES:
         ipcRenderer.send('resizeCornerWindow');
+      break;
 
       case ActionTypes.RESIZE_CORNER_WINDOW:
-        console.log('resize');
         ipcRenderer.send('resizeCornerWindow');
+      break;
+
+      case ActionTypes.RERUN_SETUP:
+        ipcRenderer.send('setup');
+      break;
 
     }
 

@@ -55,13 +55,11 @@ class Home extends Component {
   }
 
   onClear(){
-    console.log('clearing');
     var { clearRepositories } = this.props;
     clearRepositories();
   }
 
   onDelete(){
-    console.log('delete');
     storage.remove('repositories');
   }
 

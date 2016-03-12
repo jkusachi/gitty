@@ -27,7 +27,6 @@ class RepositoryListItem extends Component {
   }
 
   onGitPull(){
-    console.log('git pull!');
     ipcRenderer.send('git-pull', this.props.index)
   }
 
@@ -48,8 +47,6 @@ class RepositoryListItem extends Component {
     }else{
       health = 'flu';
     }
-    console.log('props', this.props);
-
     return (
       <div className={cx(styles.listItem, styles[health])}>
 
