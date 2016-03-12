@@ -15,36 +15,71 @@ class RepositoryProcess {
   }
 
   set(renderWindow){
-    this.window = renderWindow;
+    this.window = renderWindow || null;
   }
 
   getStatus(){
+    console.log('getting status');
     return () => {
+      console.log('in here');
       var self = this;
 
+      try{
+        storage.get('repositories', function(err, data){
+          if(err) throw err;
+
+          _.map(data, (repoPath, index) => {
+
+            if(!repoPath) return;
+
+             simpleGit( path.resolve(repoPath))
+            .status((err, status)=>{
+
+              //send status update
+              self.window.webContents.send('statusUpdate', {
+                index: index,
+                status: status
+              });
+            });
+          })
+
+        });
+      }
+      catch(err){
+        console.error('error', err.stack)
+      }
+    }
+  }
+
+  pullStorageIndex(pullIndex){
+
+    try{
+      var self = this;
       storage.get('repositories', function(err, data){
         if(err) throw err;
 
-        console.log('got data ', data);
-
-        _.map(data, (repoPath, index) => {
-          console.log('processing ', repoPath);
-
-          if(!repoPath) return;
-
-           simpleGit( path.resolve(repoPath))
-          .status((err, status)=>{
-
-            //send status update
-            self.window.webContents.send('statusUpdate', {
-              index: index,
-              status: status
-            });
-          });
-        })
-
+        var pullPath = data[pullIndex];
+        if(pullPath){
+          simpleGit(pullPath)
+          .pull(function(err, update){
+            if(update && update.summary.changes){
+              self.window.webContents.send('makeClean', {
+                index: pullIndex
+              })
+            }
+            else if(!update){
+              self.window.webContents.send('makeDirty', {
+                index: pullIndex
+              })
+            }
+          })
+        }
       });
     }
+    catch(err){
+      console.error('Error:', err.stack);
+    }
+
   }
 
 }

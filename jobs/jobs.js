@@ -3,12 +3,15 @@
 class Job {
 
   constructor(interval){
-    console.log('creating new job');
     this.interval = null;
   }
 
   start(timeout){
-    this.interval = setInterval(this.intervalFn, timeout || 5000);
+    //this.interval = setInterval(this.intervalFn, timeout || 5000);
+
+    console.log('fn ', this.intervalFn);
+    setImmediate(this.intervalFn);
+    //this.intervalFn.call(this);
   }
 
   set(fn){

@@ -13,6 +13,16 @@ export function finishLoading(){
   }
 }
 
+export function setDirty(index, status){
+  return {
+    type: ActionTypes.SET_DIRTY,
+    data: {
+      index,
+      status
+    }
+  }
+}
+
 export function completeSetup(){
   return {
     type: ActionTypes.COMPLETE_SETUP

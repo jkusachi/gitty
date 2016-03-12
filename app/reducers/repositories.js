@@ -1,5 +1,6 @@
 
 import {
+  SET_DIRTY,
   REMOVE_REPOSITORY,
   ADD_REPOSITORIES,
   SAVE_STATUS,
@@ -29,6 +30,20 @@ export default function repositories(state = initialState, action){
 
     case CLEAR_REPOSITORIES:
       return Object.assign({}, state, {repos: null });
+
+
+    case SET_DIRTY:
+      return Object.assign({}, state, {
+        repos: state.repos.map( (repo, index) => {
+          console.log('index ', action.data.index );
+          if(index === action.data.index){
+            return Object.assign({}, repo, {
+              isDirty: action.data.status
+            })
+          }
+          return repo;
+        })
+      });
 
     case SAVE_STATUS:
       var status = action.data.status;

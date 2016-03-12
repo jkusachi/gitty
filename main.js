@@ -16,10 +16,12 @@ const Menu = electron.Menu;
 const crashReporter = electron.crashReporter;
 const Tray = electron.Tray;
 const shell = electron.shell;
+const dialog = electron.dialog;
 
 var Positioner = require('electron-positioner');
 var storage = require('electron-json-storage');
 var appIcon;
+var positioner; //holds cornerWindow position
 
 let menu;
 let template;
@@ -47,10 +49,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.on('window-all-closed', () => {
-  console.log('all closed');
-  //if (process.platform !== 'darwin') app.quit();
-
-  app.quit();
+  if (process.platform !== 'darwin') app.quit();
 });
 
 app.on('ready', () => {
@@ -60,12 +59,6 @@ app.on('ready', () => {
     storage.remove('repositories');
     return;
   }
-
-  //appIcon.setToolTip('Gitty');
-  //appIcon.setContextMenu(contextMenu);
-
-  //check storage somewhere by userid?
-  //check local storage?
 
   var value = new Promise(function(resolve, reject){
     return storage.get('repositories', function(err, data){
@@ -94,16 +87,13 @@ var loadSetup = function(event){
   }
 
   mainWindow = new BrowserWindow({ width: 800, height: 850, frame: false });
-
   mainWindow.loadURL(`file://${__dirname}/app/app.html`);
 
   mainWindow.on('closed', () => {
-    console.log('Action::closed');
     mainWindow = null;
   });
 
   ipc.on('app-quit', function() {
-    console.log('Action::app quit');
     app.quit();
   });
 
@@ -123,12 +113,46 @@ var start = function(event){
 
    var contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Sync',
-      type: 'radio'
+      label: 'Show Repositories',
+      type: 'radio',
+      click: function(item, focusedWindow){
+        cornerWindow.show();
+      }
     },
     {
-      label: 'Add Repository',
-      type: 'radio' },
+      label: 'Add Repositories',
+      type: 'radio',
+      click: onAddRepository
+    },
+    {
+      label: 'Hide',
+      type: 'radio',
+      click: function(){
+        cornerWindow.hide();
+      }
+    },
+    {
+      label: 'Move Window',
+      submenu: [
+        {,
+          label: 'Top Left',
+          click: function(event, index){
+            if(cornerWindow && positioner){
+              positioner.move('topLeft');
+            }
+          }
+        }
+        {
+          label: 'Top Right'
+        },
+        {
+          label: 'Bottom Left'
+        },
+        {
+          label: 'Bottom Right'
+        }
+      ]
+    },
     {
       label: 'Quit',
       type: 'radio',
@@ -164,25 +188,29 @@ var start = function(event){
      appIcon.destroy();
   });
 
-  cornerWindow.openDevTools();
+  if (process.env.NODE_ENV === 'development') {
+    //cornerWindow.openDevTools();
+  }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
   cornerWindow.show();
 
-  var positioner = new Positioner(cornerWindow);
+  positioner = new Positioner(cornerWindow);
   positioner.move('topRight');
 
   cornerWindow.on('closed', () => {
     job.stop();
   })
+``
+  cornerWindow.on('blur', function(){
+    //cornerWindow.hide();
+  })
 
   storage.get('repositories', function(err,data){
     var paths = data;
-
-    cornerWindow.setSize(600, paths.length * ITEM_HEIGHT + ITEM_HEIGHT_EXTRAS);
-
+    cornerWindow.setSize(600, calculateHeight(paths.length) );
     repoProcess.set(cornerWindow);
     job.set( repoProcess.getStatus() );
-    job.start(5000);
+    job.start(10000);
   });
 
 }
@@ -192,11 +220,43 @@ ipc.on('setup', loadSetup);
 ipc.on('start', start);
 
 ipc.on('resizeCornerWindow', function(event){
-  console.log('resizeCornerWindow');
   storage.get('repositories', function(err,data){
     var paths = data;
-    cornerWindow.setSize(600, paths.length * ITEM_HEIGHT + ITEM_HEIGHT_EXTRAS);
+    cornerWindow.setSize(600, calculateHeight(paths.length) );
   });
 })
 
+
+ipc.on('react-app-started', function(event, index){
+  if(repoProcess){
+    storage.get('repositories', function(err, data){
+      cornerWindow.setSize(600, calculateHeight(data.length))
+      repoProcess.getStatus()
+    })
+  }
+});
+
+ipc.on('git-pull', function(event, index){
+
+  var gitProcess = new RepositoryProcess();
+  gitProcess.set(cornerWindow);
+  gitProcess.pullStorageIndex(index);
+
+})
+
+
+const onAddRepository = function(event, index){
+  dialog.showOpenDialog({
+    properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
+  }, function(pathArray){
+    if(pathArray){
+      cornerWindow.webContents.send('addRepositories', pathArray);
+    }
+  });
+
+}
+
+const calculateHeight = function(numItems){
+  return numItems * ITEM_HEIGHT;
+}
 

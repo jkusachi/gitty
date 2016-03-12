@@ -7,6 +7,8 @@ export const FINISH_LOADING = 'FINISH_LOADING';
 export const COMPLETE_SETUP = 'COMPLETE_SETUP';
 
 
+export const SET_DIRTY  = 'SET_DIRTY';
+
 export const RESET = 'RESET';
 
 export const CLEAR_REPOSITORIES = 'CLEAR_REPOSITORIES';

@@ -18,11 +18,30 @@ export default class RepositoryList extends Component {
   constructor(props){
     super(props);
 
-    var { getRepositories, saveStatus } = this.props;
+    var {
+        addRepositories,
+        getRepositories,
+        saveStatus
+    } = this.props;
+
     getRepositories();
 
     ipcRenderer.on('statusUpdate', (evt,message) => {
       saveStatus(message);
+    });
+
+    ipcRenderer.on('addRepositories', function(evt, message){
+      addRepositories(message);
+    })
+
+    ipcRenderer.on('makeDirty', (evt,message) => {
+      var { setDirty } = this.props;
+      setDirty(message.index, true);
+    });
+
+    ipcRenderer.on('makeClean', (evt,message) => {
+      var { setDirty } = this.props;
+      setDirty(message.index, false);
     });
 
   }
@@ -33,7 +52,9 @@ export default class RepositoryList extends Component {
     dialog.showOpenDialog({
       properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
     }, function(pathArray){
-      addRepositories(pathArray);
+      if(pathArray){
+        addRepositories(pathArray);
+      }
     });
 
   }
@@ -48,11 +69,16 @@ export default class RepositoryList extends Component {
       <div className={styles.container}>
 
         <If condition={this.props.repositories}>
-          {_.map(this.props.repositories.repos, function(item, index){
-            return ( <RepositoryListItem data={item} key={index} index={index}/> );
+          {_.map(this.props.repositories.repos, (item, index) => {
+            return ( <RepositoryListItem
+                        data={item}
+                        key={index}
+                        isDirty={item.isDirty}
+                        index={index}/> );
           })}
         </If>
 
+        {/*
         <div className={styles.addRepository}>
           <button onClick={this.onAddRepository.bind(this)}>+ add repository</button>
         </div>
@@ -60,6 +86,7 @@ export default class RepositoryList extends Component {
         <div className={styles.mainActions}>
           <button onClick={this.onClear.bind(this)}>clear repositories</button>
         </div>
+        */}
 
       </div>
     );

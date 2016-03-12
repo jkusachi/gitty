@@ -7,6 +7,9 @@ import path from 'path';
 import _ from 'lodash';
 import cx from 'classnames';
 
+import {ipcRenderer} from 'electron';
+import {remote} from 'electron';
+
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
@@ -21,6 +24,11 @@ class RepositoryListItem extends Component {
   onDeleteRepository() {
     var {removeRepository} = this.props
     removeRepository(this.props.index);
+  }
+
+  onGitPull(){
+    console.log('git pull!');
+    ipcRenderer.send('git-pull', this.props.index)
   }
 
   render() {
@@ -40,12 +48,16 @@ class RepositoryListItem extends Component {
     }else{
       health = 'flu';
     }
+    console.log('props', this.props);
 
     return (
       <div className={cx(styles.listItem, styles[health])}>
 
+        <div className={styles.contentWrapper}>
           <div className={true}>
-            <label>{shortPathName}</label>
+            <label>{shortPathName}
+            <If condition={this.props.isDirty}> is Dirty!</If>
+            </label>
             <div className={styles.branchInfo}>
               <div className={styles.current}>Local Branch: <span>{current}</span></div>
               <div className={styles.tracking}>-> Tracks Remote: <span>{tracking}</span></div>
@@ -54,7 +66,7 @@ class RepositoryListItem extends Component {
 
           <div className={styles.buttons}>
             <If condition={health !== 'healthy'}>
-              <button className={styles.pull}>git pull</button>
+              <button onClick={this.onGitPull.bind(this)} className={styles.pull}>git pull</button>
             </If>
           </div>
 
@@ -72,6 +84,13 @@ class RepositoryListItem extends Component {
           <div className={styles.actions}>
             <i onClick={this.onDeleteRepository.bind(this)} className={cx(styles.actionButton, "fa fa-trash")}></i>
           </div>
+        </div>
+
+        <If condition={this.props.isDirty}>
+          <div
+            style={{background: 'url(../images/dirty.jpg)'}}
+            className={styles.isDirty} />
+        </If>
 
       </div>
     );
