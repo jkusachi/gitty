@@ -125,33 +125,49 @@ var start = function(event){
       click: onAddRepository
     },
     {
-      label: 'Hide',
-      type: 'radio',
-      click: function(){
-        cornerWindow.hide();
-      }
-    },
-    {
       label: 'Move Window',
       submenu: [
-        {,
+        {
           label: 'Top Left',
           click: function(event, index){
             if(cornerWindow && positioner){
               positioner.move('topLeft');
             }
           }
-        }
-        {
-          label: 'Top Right'
         },
         {
-          label: 'Bottom Left'
+          label: 'Top Right',
+          click: function(event, index){
+            if(cornerWindow && positioner){
+              positioner.move('topRight');
+            }
+          }
         },
         {
-          label: 'Bottom Right'
+          label: 'Bottom Left',
+          click: function(event, index){
+            if(cornerWindow && positioner){
+              positioner.move('bottomLeft');
+            }
+          }
+
+        },
+        {
+          label: 'Bottom Right',
+          click: function(event, index){
+            if(cornerWindow && positioner){
+              positioner.move('bottomRight');
+            }
+          }
         }
       ]
+    },
+    {
+      label: 'Hide',
+      type: 'radio',
+      click: function(){
+        cornerWindow.hide();
+      }
     },
     {
       label: 'Quit',
@@ -200,7 +216,7 @@ var start = function(event){
   cornerWindow.on('closed', () => {
     job.stop();
   })
-``
+
   cornerWindow.on('blur', function(){
     //cornerWindow.hide();
   })
@@ -210,7 +226,7 @@ var start = function(event){
     cornerWindow.setSize(600, calculateHeight(paths.length) );
     repoProcess.set(cornerWindow);
     job.set( repoProcess.getStatus() );
-    job.start(10000);
+    job.start(30000);
   });
 
 }
@@ -230,8 +246,12 @@ ipc.on('resizeCornerWindow', function(event){
 ipc.on('react-app-started', function(event, index){
   if(repoProcess){
     storage.get('repositories', function(err, data){
-      cornerWindow.setSize(600, calculateHeight(data.length))
-      repoProcess.getStatus()
+      if(cornerWindow){
+        repoProcess.set(cornerWindow);
+        cornerWindow.setSize(600, calculateHeight(data.length))
+      }
+      (repoProcess.getStatus())();
+
     })
   }
 });

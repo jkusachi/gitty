@@ -7,14 +7,12 @@ class Job {
   }
 
   start(timeout){
-    //this.interval = setInterval(this.intervalFn, timeout || 5000);
-
-    console.log('fn ', this.intervalFn);
-    setImmediate(this.intervalFn);
-    //this.intervalFn.call(this);
+    console.log('starting job', timeout);
+    this.interval = setInterval(this.intervalFn, timeout || 5000);
   }
 
   set(fn){
+    console.log('setting functi');
     this.intervalFn = fn;
   }
 

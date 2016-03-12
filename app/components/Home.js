@@ -95,7 +95,6 @@ class Home extends Component {
           </div>
 
 
-
           <Repositories
                 onClear={this.onClear.bind(this)}
                 items={this.props.repositories.repos}

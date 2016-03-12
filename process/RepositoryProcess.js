@@ -19,9 +19,9 @@ class RepositoryProcess {
   }
 
   getStatus(){
-    console.log('getting status');
+    console.log('JOB - getStatus()');
     return () => {
-      console.log('in here');
+      console.log('JOB - running job');
       var self = this;
 
       try{
@@ -34,19 +34,21 @@ class RepositoryProcess {
 
              simpleGit( path.resolve(repoPath))
             .status((err, status)=>{
-
+              if(err) throw err;
               //send status update
-              self.window.webContents.send('statusUpdate', {
-                index: index,
-                status: status
-              });
+              if(self.window){
+                self.window.webContents.send('statusUpdate', {
+                  index: index,
+                  status: status
+                });
+              }
             });
           })
 
         });
       }
       catch(err){
-        console.error('error', err.stack)
+        console.error('JOB ERROR', err.stack)
       }
     }
   }
