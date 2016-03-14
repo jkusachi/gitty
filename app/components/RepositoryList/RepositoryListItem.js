@@ -13,6 +13,8 @@ import {remote} from 'electron';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
+import open from 'mac-open';
+
 import * as repoActions from '../../actions/repositories' ;
 
 class RepositoryListItem extends Component {
@@ -34,6 +36,11 @@ class RepositoryListItem extends Component {
     ipcRenderer.send('git-pull', this.props.index)
   }
 
+  onTerminal(){
+
+    ipcRenderer.send('openTerminal', this.props.data.path)
+  }
+
   render() {
 
     var {path, status} = this.props.data;
@@ -51,6 +58,8 @@ class RepositoryListItem extends Component {
     }else{
       health = 'flu';
     }
+
+
     return (
       <div className={cx(styles.listItem, styles[health])}>
 
@@ -66,6 +75,7 @@ class RepositoryListItem extends Component {
           </div>
 
           <div className={styles.buttons}>
+
             <If condition={!this.props.data.isLoading}>
               <If condition={health !== 'healthy'}>
                 <button onClick={this.onGitPull.bind(this)} className={styles.pull}>git pull</button>
@@ -88,6 +98,7 @@ class RepositoryListItem extends Component {
               <div className={styles.behind}>-{behind}</div>
             </If>
           </div>
+          <i onClick={this.onTerminal.bind(this)} className={cx(styles.externalLink, 'fa fa-external-link')}></i>
           <div className={styles.actions}>
             <i onClick={this.onDeleteRepository.bind(this)} className={cx(styles.actionButton, "fa fa-trash")}></i>
           </div>

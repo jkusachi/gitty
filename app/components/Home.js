@@ -72,7 +72,7 @@ class Home extends Component {
       <div className={styles.wrapper}>
         <div className={styles.container}>
           <div className={styles.image}>
-            <img src="../images/Gitty-Full-Gradient.png"  width="600" />
+            <img src="../images/Gitty-Full-Gradient.png"  width="650" />
           </div>
 
           <p className={styles.desc}>Gitty is an open-source menu bar tool for OS X that keeps you informed on the status of

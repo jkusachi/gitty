@@ -136,8 +136,30 @@ label{
   background: #5BB3F4;
 }
 
-.buttons .pull{
+
+button.terminal{
+  background: black;
+  border: black;
+  color: #24FF24;
+  display: inline-block;
+  height: 30px;
+  align-self: center;
+  margin-left: 10px;
 }
+
+.externalLink{
+  font-size: 20px;
+  align-self: center;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.externalLink:hover,
+.externalLink:active{
+  border-radius: 5px;
+  background: #882525;
+  color: white;
+}
+
 
 .buttons .pull:hover,
 .buttons .pull:active{
@@ -172,7 +194,6 @@ label{
 
 .listItem .actions{
   align-self: center;
-  margin-left: 20px;
 }
 
 .listItem .actionButton{
@@ -182,6 +203,7 @@ label{
 
 .listItem .actions:hover,
 .listItem .actions:active{
+  cursor: pointer;
   border-radius: 5px;
   background: #882525;
   color: white;

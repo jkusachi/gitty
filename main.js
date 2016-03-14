@@ -23,6 +23,8 @@ var storage = require('electron-json-storage');
 var appIcon;
 var positioner; //holds cornerWindow position
 
+var open = require('mac-open');
+
 let menu;
 let template;
 var mainWindow = null;
@@ -174,7 +176,30 @@ var start = function(event){
       click: function(){
         cornerWindow.hide();
       }
-    }
+    },
+    {
+      label: 'Open With',
+      submenu: [
+        {
+          label: 'Terminal',
+          click: function(){
+            storage.set('terminal', 'terminal');
+          }
+        },
+        {
+          label: 'Sublime Text',
+          click: function(){
+            storage.set('terminal', 'Sublime Text');
+          }
+        },
+        {
+          label: 'Sublime Text 2',
+          click: function(){
+            storage.set('terminal', 'Sublime Text 2');
+          }
+        }
+      ]
+    },
   ]);
 
 
@@ -182,7 +207,7 @@ var start = function(event){
 
   //create the corner window
   cornerWindow = new BrowserWindow({
-    width: 600,
+    width: 650,
     height: 200,
     show: false,
     resizable: true,
@@ -195,7 +220,7 @@ var start = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    //cornerWindow.openDevTools();
+    cornerWindow.openDevTools();
   }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
   cornerWindow.setMenuBarVisibility(false);
@@ -214,7 +239,7 @@ var start = function(event){
 
   storage.get('repositories', function(err,data){
     var paths = data;
-    cornerWindow.setSize(600, calculateHeight(paths.length) );
+    cornerWindow.setSize(650, calculateHeight(paths.length) );
     repoProcess.set(cornerWindow);
     job.set( repoProcess.getStatus() );
     job.start(30000);
@@ -229,7 +254,7 @@ ipc.on('start', start);
 ipc.on('resizeCornerWindow', function(event){
   storage.get('repositories', function(err,data){
     var paths = data;
-    cornerWindow.setSize(600, calculateHeight(paths.length) );
+    cornerWindow.setSize(650, calculateHeight(paths.length) );
   });
 })
 
@@ -239,7 +264,7 @@ ipc.on('react-app-started', function(event, index){
     storage.get('repositories', function(err, data){
       if(cornerWindow){
         repoProcess.set(cornerWindow);
-        cornerWindow.setSize(600, calculateHeight(data.length))
+        cornerWindow.setSize(650, calculateHeight(data.length))
       }
       (repoProcess.getStatus())();
 
@@ -261,6 +286,23 @@ ipc.on('git-pull', function(event, index){
   gitProcess.pullStorageIndex(index);
 
 })
+
+ipc.on('openTerminal', function(event,path){
+
+  storage.has('terminal', function(err,hasData){
+    if(hasData){
+      storage.get('terminal', function(err,data){
+        open(path, { a: data });
+      })
+    }else{
+      open(path, { a: "Terminal" });
+    }
+  })
+  storage.get('terminal', function(err,data){
+    if(err) throw err;
+  });
+})
+
 
 
 const onAddRepository = function(event, index){
