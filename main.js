@@ -171,19 +171,18 @@ var start = function(event){
       ]
     },
     {
-      label: 'Hide',
-      type: 'radio',
-      click: function(){
-        cornerWindow.hide();
-      }
-    },
-    {
-      label: 'Open With',
+      label: 'Set External Opener',
       submenu: [
         {
           label: 'Terminal',
           click: function(){
             storage.set('terminal', 'terminal');
+          }
+        },
+        {
+          label: 'iTerm',
+          click: function(){
+            storage.set('terminal', 'iterm');
           }
         },
         {
@@ -199,6 +198,13 @@ var start = function(event){
           }
         }
       ]
+    },
+    {
+      label: 'Hide',
+      type: 'radio',
+      click: function(){
+        cornerWindow.hide();
+      }
     },
   ]);
 
