@@ -61,8 +61,30 @@ class RepositoryProcess {
     }
   }
 
-  pullStorageIndex(pullIndex){
+  getIndividualStatus(repoPath, index){
 
+    simpleGit( path.resolve(repoPath))
+    .fetch()
+    .status((err, status)=>{
+      if(err) throw err;
+      console.log('--Individual Status-------------------------');
+      console.log('Git Status for: ', repoPath);
+      console.log(status);
+      if(this.window){
+        this.window.webContents.send('statusUpdate', {
+          index: index,
+          status: status
+        });
+
+        this.window.webContents.send('makeClean', {
+          index: index
+        });
+      }
+    });
+
+  }
+
+  pullStorageIndex(pullIndex){
     try{
       var self = this;
       storage.get('repositories', function(err, data){
@@ -72,10 +94,11 @@ class RepositoryProcess {
         if(pullPath){
           simpleGit(pullPath)
           .pull(function(err, update){
+            console.log('updateeee')
+            console.log(update);;
+
             if(update && update.summary.changes){
-              self.window.webContents.send('makeClean', {
-                index: pullIndex
-              })
+              self.getIndividualStatus(pullPath, pullIndex)
             }
             else if(!update){
               self.window.webContents.send('makeDirty', {

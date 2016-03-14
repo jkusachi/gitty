@@ -35,13 +35,15 @@ export default class RepositoryList extends Component {
     })
 
     ipcRenderer.on('makeDirty', (evt,message) => {
-      var { setDirty } = this.props;
+      var { setDirty, finishItemLoading } = this.props;
       setDirty(message.index, true);
+      finishItemLoading(message.index);
     });
 
     ipcRenderer.on('makeClean', (evt,message) => {
-      var { setDirty } = this.props;
+      var { setDirty, finishItemLoading } = this.props;
       setDirty(message.index, false);
+      finishItemLoading(message.index);
     });
 
   }

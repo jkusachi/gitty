@@ -1,5 +1,7 @@
 
 import {
+  SET_ITEM_LOADING,
+  FINISH_ITEM_LOADING,
   SET_DIRTY,
   REMOVE_REPOSITORY,
   ADD_REPOSITORIES,
@@ -35,7 +37,6 @@ export default function repositories(state = initialState, action){
     case SET_DIRTY:
       return Object.assign({}, state, {
         repos: state.repos.map( (repo, index) => {
-          console.log('index ', action.data.index );
           if(index === action.data.index){
             return Object.assign({}, repo, {
               isDirty: action.data.status
@@ -59,6 +60,32 @@ export default function repositories(state = initialState, action){
             }
           }
         }
+      });
+
+    case SET_ITEM_LOADING:
+      var indexToUpdate = action.data;
+      return Object.assign({}, state, {
+        repos: state.repos.map( (repo, index) => {
+          if(index === indexToUpdate){
+            return Object.assign({}, repo, {
+              isLoading: true
+            })
+          }
+          return repo;
+        })
+      });
+
+    case FINISH_ITEM_LOADING:
+      var indexToUpdate = action.data;
+      return Object.assign({}, state, {
+        repos: state.repos.map( (repo, index) => {
+          if(index === indexToUpdate){
+            return Object.assign({}, repo, {
+              isLoading: false
+            })
+          }
+          return repo;
+        })
       });
 
     case SAVE_REPOSITORIES:

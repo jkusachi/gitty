@@ -64,6 +64,19 @@ export function removeRepository(index){
   };
 }
 
+export function setItemLoading(index){
+  return {
+    type: ActionTypes.SET_ITEM_LOADING,
+    data: index
+  };
+}
+
+export function finishItemLoading(index){
+  return {
+    type: ActionTypes.FINISH_ITEM_LOADING,
+    data: index
+  };
+}
 
 export function rerunSetup(){
   return {

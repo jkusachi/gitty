@@ -41,6 +41,7 @@ const hasSetup = false;
 var job = new Job();
 var repoProcess = new RepositoryProcess();
 
+//killswitch the app
 const doKill = false;
 
 

@@ -37,8 +37,6 @@ class Home extends Component {
     dialog.showOpenDialog({
       properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
     }, function(pathArray){
-      console.debug('saving from dialog ', pathArray);
-
       if(pathArray){
         if(repos && repos.length > 0){
           addRepositories(pathArray);

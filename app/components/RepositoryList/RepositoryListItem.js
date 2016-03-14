@@ -27,6 +27,10 @@ class RepositoryListItem extends Component {
   }
 
   onGitPull(){
+
+    var {setItemLoading} = this.props;
+    setItemLoading(this.props.index);
+
     ipcRenderer.send('git-pull', this.props.index)
   }
 
@@ -62,8 +66,14 @@ class RepositoryListItem extends Component {
           </div>
 
           <div className={styles.buttons}>
-            <If condition={health !== 'healthy'}>
-              <button onClick={this.onGitPull.bind(this)} className={styles.pull}>git pull</button>
+            <If condition={!this.props.data.isLoading}>
+              <If condition={health !== 'healthy'}>
+                <button onClick={this.onGitPull.bind(this)} className={styles.pull}>git pull</button>
+              </If>
+            <Else/>
+              <div className={styles.isLoading}>
+                <i className="fa fa-refresh fa-spin"></i>
+              </div>
             </If>
           </div>
 
