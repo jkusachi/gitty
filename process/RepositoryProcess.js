@@ -33,7 +33,18 @@ class RepositoryProcess {
             if(!repoPath) return;
             try{
               simpleGit( path.resolve(repoPath))
-              .fetch()
+              .fetch((err) => {
+                //catch invalid repos and set error
+                if(err){
+                  self.window.webContents.send('statusUpdate', {
+                    index: index,
+                    status: {
+                      isInvalid: true
+                    }
+                  });
+                  return Promise.reject('reject')
+                }
+              })
               .status((err, status)=>{
                 if(err) throw err;
                 console.log('---------------------------');
