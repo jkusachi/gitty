@@ -260,7 +260,9 @@ ipc.on('start', start);
 ipc.on('resizeCornerWindow', function(event){
   storage.get('repositories', function(err,data){
     var paths = data;
-    cornerWindow.setSize(650, calculateHeight(paths.length) );
+    if(cornerWindow){
+      cornerWindow.setSize(650, calculateHeight(paths.length) );
+    }
   });
 })
 

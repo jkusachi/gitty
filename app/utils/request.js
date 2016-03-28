@@ -19,6 +19,7 @@ export default function({getState, dispatch}){
           if(err) throw err;
           if(!_.isEmpty(data))
             dispatch(repositoryActions.saveRepositories(data));
+            dispatch(repositoryActions.refreshRepositories());
         });
         break;
 

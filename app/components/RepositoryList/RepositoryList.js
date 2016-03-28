@@ -19,6 +19,7 @@ export default class RepositoryList extends Component {
     super(props);
 
     var {
+        refreshRepositories,
         addRepositories,
         getRepositories,
         saveStatus

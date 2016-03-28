@@ -25,6 +25,7 @@
   flex-direction: row;
   align-content: center;
   position: relative;
+  height: 60px;
 }
 
 .contentWrapper{
