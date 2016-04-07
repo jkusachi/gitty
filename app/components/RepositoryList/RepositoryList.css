@@ -209,3 +209,12 @@ button.terminal{
   background: #882525;
   color: white;
 }
+
+
+/**
+ * INVALID
+**/
+
+.invalid .externalLink{
+  margin-left: auto;
+}

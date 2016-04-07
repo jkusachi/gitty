@@ -63,15 +63,15 @@ class RepositoryListItem extends Component {
 
 
     return (
-      <div className={cx(styles.listItem, styles[health])}>
+      <div className={cx(styles.listItem, styles[health], isInvalid ? styles.invalid : "")}>
         <div className={styles.contentWrapper}>
 
           <If condition={isInvalid}>
-            <div className={true}>
+            <div>
               <label>{shortPathName} is Invalid</label>
             </div>
           <Else/>
-            <div className={true}>
+            <div>
               <label>{shortPathName}
                 <If condition={this.props.isDirty}> is Dirty!</If>
               </label>
