@@ -10,23 +10,18 @@ var _ = require('lodash');
 
 class RepositoryProcess {
 
-  constructor(){
-
-  }
-
   set(renderWindow){
   this.window = renderWindow || null;
   }
 
-  getStatus(){
-    console.log('JOB - getStatus()');
-    return () => {
-      console.log('JOB - running job');
+  run(){
+    console.log('--running');
       var self = this;
-
       try{
         storage.get('repositories', function(err, data){
           if(err) throw err;
+
+          console.log('JOB - running job with ', data.length , ' repos');
 
           _.map(data, (repoPath, index) => {
 
@@ -69,7 +64,7 @@ class RepositoryProcess {
       catch(err){
         console.error('JOB ERROR', err.stack)
       }
-    }
+
   }
 
   getIndividualStatus(repoPath, index){

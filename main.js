@@ -244,11 +244,13 @@ var start = function(event){
   })
 
   storage.get('repositories', function(err,data){
+    console.log('-- repositories');
+
     var paths = data;
     cornerWindow.setSize(650, calculateHeight(paths.length) );
     repoProcess.set(cornerWindow);
-    job.set( repoProcess.getStatus() );
-    job.start(30000);
+    job.set( repoProcess.run );
+    job.start(600000);
   });
 
 }
@@ -257,6 +259,9 @@ ipc.on('setup', loadSetup);
 
 ipc.on('start', start);
 
+/**
+ * Resizes corner window
+ */
 ipc.on('resizeCornerWindow', function(event){
   storage.get('repositories', function(err,data){
     var paths = data;
@@ -266,27 +271,38 @@ ipc.on('resizeCornerWindow', function(event){
   });
 })
 
-
+/**
+ * Message called in React App Initialization
+ */
 ipc.on('react-app-started', function(event, index){
+
+});
+
+
+/**
+ * Called when we want to refresh repositories
+ */
+ipc.on('refreshRepositories', function(evt, index){
+  console.log('--refreshRepositories');
+
   if(repoProcess){
+
     storage.get('repositories', function(err, data){
       if(cornerWindow){
         repoProcess.set(cornerWindow);
         cornerWindow.setSize(650, calculateHeight(data.length))
       }
-      (repoProcess.getStatus())();
+      repoProcess.run(data || []);
 
     })
-  }
-});
 
-ipc.on('refreshRepositories', function(evt, index){
-  if(repoProcess){
-    repoProcess.getStatus()();
   }
 })
 
 
+/**
+ * Git Pull a repo on a specific index
+ */
 ipc.on('git-pull', function(event, index){
 
   var gitProcess = new RepositoryProcess();
@@ -295,6 +311,10 @@ ipc.on('git-pull', function(event, index){
 
 })
 
+
+/**
+ * Opens a Terminal
+ */
 ipc.on('openTerminal', function(event,path){
 
   storage.has('terminal', function(err,hasData){

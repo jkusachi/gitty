@@ -12,6 +12,10 @@ class Job {
   }
 
   set(fn){
+    console.log('JOB SET');
+    console.log('fn');
+    console.log(fn);
+
     this.intervalFn = fn;
   }
 
