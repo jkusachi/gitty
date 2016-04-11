@@ -126,7 +126,7 @@ var start = function(event){
 
   appIcon = new Tray( path.join( __dirname, '/images/gitty-icon-20.png' ));
 
-   var template = require('./parts/Menu');[
+   var template = [
     {
       label: 'Show Repositories',
       type: 'normal',
@@ -389,7 +389,7 @@ const startJob = function(data){
   var interval = _.isEmpty(data) ? 600000 : data;
 
   console.log('starting job interval: ', interval);
-  job.start(data);
+  //job.start(data);
 }
 
 
