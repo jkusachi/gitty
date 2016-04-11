@@ -126,7 +126,7 @@ var start = function(event){
 
   appIcon = new Tray( path.join( __dirname, '/images/gitty-icon-20.png' ));
 
-   var template = [
+   var template = require('./parts/Menu');[
     {
       label: 'Show Repositories',
       type: 'normal',
