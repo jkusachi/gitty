@@ -159,21 +159,8 @@ var start = function(event){
       label: 'Update Repositories',
       submenu: [
         {
-          label: 'Every 5 Seconds',
-          type: 'checkbox',
-          click: function(event, index){
-            var interval = 5000;
-
-            console.log('every 5 ', this);
-            storage.set('updateInterval', interval, function(){
-              restartJob(interval);
-            });
-          },
-          value: 5000
-        },
-        {
           label: 'Every 10 Seconds',
-          type: 'checkbox',
+          type: 'radio',
           click: function(event, index){
             var interval = 10000;
             storage.set('updateInterval', interval, function(){
@@ -184,7 +171,7 @@ var start = function(event){
         },
         {
           label: 'Every 1 minute',
-          type: 'checkbox',
+          type: 'radio',
           click: function(event, index){
             var interval = 60000;
             storage.set('updateInterval', interval, function(){
@@ -195,25 +182,34 @@ var start = function(event){
         },
         {
           label: 'Every 5 Minutes',
-          type: 'checkbox',
+          type: 'radio',
           click: function(event, index){
-            storage.set('updateInterval', 300000);
+            var interval = 300000;
+            storage.set('updateInterval', interval, function(){
+              restartJob(interval);
+            });
           },
           value: 300000
         },
         {
           label: 'Every 10 Minutes',
-          type: 'checkbox',
+          type: 'radio',
           click: function(event, index){
-            storage.set('updateInterval', 600000);
+            var interval = 600000;
+            storage.set('updateInterval', interval, function(){
+              restartJob(interval);
+            });
           },
           value: 600000
         },
         {
           label: 'Every 30 Minutes',
-          type: 'checkbox',
+          type: 'radio',
           click: function(event, index){
-            storage.set('updateInterval', 1800000);
+            var interval = 1800000;
+            storage.set('updateInterval', interval, function(){
+              restartJob(interval);
+            });
           },
           value: 1800000
         }
@@ -228,6 +224,9 @@ var start = function(event){
       label: 'Add Repositories',
       type: 'normal',
       click: onAddRepository
+    },
+    {
+      type: 'separator'
     },
     {
       label: 'Move Window',
@@ -323,7 +322,7 @@ var start = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    //cornerWindow.openDevTools();
+    cornerWindow.openDevTools();
   }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
   cornerWindow.setMenuBarVisibility(false);
@@ -346,8 +345,6 @@ var start = function(event){
     var checkValue;
     if(err) throw err;
 
-    console.log('starting menu with ', data);
-
     if(data && _.isInteger(data)){
       checkValue = data;
     }else{
@@ -366,12 +363,16 @@ var start = function(event){
 
     var paths = data;
     cornerWindow.setSize(650, calculateHeight(paths.length) );
-    repoProcess.set(cornerWindow);
 
-    job.set( repoProcess.run );
 
     storage.get('updateInterval', function(err, data){
       if(err) throw err;
+
+
+      repoProcess.set(cornerWindow);
+      job.set( function(){
+        repoProcess.run();
+      });
 
       startJob(data);
     })
@@ -382,14 +383,12 @@ var start = function(event){
  Starts a Job
 **/
 const startJob = function(data){
+  console.log('----');
   console.log('startJob', data);
-  console.log('----');
-  console.log('----');
-
   var interval = _.isEmpty(data) ? 600000 : data;
 
   console.log('starting job interval: ', interval);
-  //job.start(data);
+  job.start(data);
 }
 
 
@@ -397,7 +396,8 @@ const startJob = function(data){
  Retarts a Job
 **/
 const restartJob = function(data){
-  console.log('restartJob');
+  console.log('----------');
+  console.log('restartJob!', data);
 
   job.stop();
   job.start(data);
@@ -414,10 +414,14 @@ const refreshRepositories  = function(evt, index){
         repoProcess.set(cornerWindow);
 
         if(Array.isArray(data) && data.length){
+          console.log('YES');
           cornerWindow.setSize(650, calculateHeight(data.length))
+        }else{
+          console.log("NO");
         }
       }
-      repoProcess.run(data || []);
+      //repoProcess.run(data || []);
+      job.runImmediate();
 
     })
 
@@ -476,9 +480,9 @@ ipc.on('react-app-started', function(event, index){
  */
 ipc.on('git-pull', function(event, index){
 
-  var gitProcess = new RepositoryProcess();
-  gitProcess.set(cornerWindow);
-  gitProcess.pullStorageIndex(index);
+  //var gitProcess = new RepositoryProcess();
+  repoProcess.set(cornerWindow);
+  repoProcess.pullStorageIndex(index);
 
 })
 

@@ -21,7 +21,7 @@ class Home extends Component {
 
   constructor(props){
     super(props);
-    this.getRepos();
+    //this.getRepos();
   }
 
   getRepos(){
@@ -39,7 +39,9 @@ class Home extends Component {
     }, function(pathArray){
       if(pathArray){
         if(repos && repos.length > 0){
-          addRepositories(pathArray);
+          addRepositories(pathArray, {
+            noRefresh: true
+          });
         }else {
           saveRepositories(pathArray);
         }

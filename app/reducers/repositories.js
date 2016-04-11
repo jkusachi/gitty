@@ -97,7 +97,6 @@ export default function repositories(state = initialState, action){
       });
 
     case ADD_REPOSITORIES:
-
       var newList = state.repos.concat ( _.map(action.data, function(item){
         return _.create({},{ path: item});
       }) );

@@ -57,15 +57,26 @@ export default function({getState, dispatch}){
       break;
 
       case ActionTypes.ADD_REPOSITORIES:
+
+        var options = action.options || {};
+
          storage.has('repositories', function(err,hasKey){
           if(err) throw err;
           if(hasKey){
             storage.get('repositories', function(err,data){
+
               var newStorage = data.concat(action.data);
+
               storage.set('repositories', newStorage, function(err,data){
                 if(err) throw err;
-                dispatch(repositoryActions.finishLoading());
-                dispatch(repositoryActions.refreshRepositories() );
+
+                  dispatch(repositoryActions.finishLoading());
+
+                  if( !options.noRefresh){
+                    dispatch(repositoryActions.refreshRepositories() );
+                  }
+                  else{ console.log(2); }
+
               });
             });
           }else{

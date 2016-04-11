@@ -10,7 +10,8 @@ var _ = require('lodash');
 
 function getElapsed(start, end){
 
-  console.log('getElapsed');
+  console.log('start -- ', start);
+  console.log('end -- ', end);
   console.log(start);
   console.log(end);
   var timeDiff = end - start;
@@ -33,6 +34,7 @@ function getElapsed(start, end){
 class RepositoryProcess {
 
   set(renderWindow){
+    console.log('RepositoryProcess::set', renderWindow);
     this.window = renderWindow || null;
   }
 
@@ -44,7 +46,7 @@ class RepositoryProcess {
     var now = new Date();
 
     var elapsed = getElapsed(this.timer, now);
-    console.log('JOB--running');
+    console.log('-- JOB running');
     console.log(elapsed.minutes + ' minutes, ' + elapsed.seconds +' seconds since last ran');
 
     this.timer = now;
@@ -56,13 +58,7 @@ class RepositoryProcess {
 
           console.log('--running with ', data.length , ' repos');
 
-          console.log('data? ', data);
-
           _.map(data, (repoPath, index) => {
-
-            console.log('something? ', repoPath);
-
-            return;
 
             if(!repoPath) return;
             try{
@@ -77,8 +73,6 @@ class RepositoryProcess {
                     }
                   });
                   return Promise.reject('reject')
-                }else{
-                  return Promise.reject('reject')
                 }
 
               })
@@ -88,12 +82,17 @@ class RepositoryProcess {
                 //console.log('Git Status for: ', repoPath);
                 //console.log(status);
                 //send status update
+
                 if(self.window){
+                  console.log('Updating window');
                   self.window.webContents.send('statusUpdate', {
                     index: index,
                     status: status
                   });
+                }else{
+                  console.log('no window');
                 }
+
                 return Promise.resolve(true);
               });
             }
