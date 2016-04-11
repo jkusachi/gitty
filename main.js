@@ -4,6 +4,7 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
 const path = require('path');
+var _ = require('lodash');
 
 var Job = require('./jobs/jobs');
 var RepositoryProcess = require('./process/RepositoryProcess');
@@ -40,12 +41,14 @@ const ITEM_HEIGHT = 60;
 const ITEM_HEIGHT_EXTRAS = 45;
 const hasSetup = false;
 
+
+
+
 var job = new Job();
 var repoProcess = new RepositoryProcess();
 
 //killswitch the app
 const doKill = false;
-
 
 if (process.env.NODE_ENV === 'development') {
   require('electron-debug')();
@@ -59,6 +62,7 @@ app.on('ready', () => {
 
   //killswitch
   if(doKill){
+    storage.remove('updateInterval');
     storage.remove('repositories');
     return;
   }
@@ -84,6 +88,7 @@ app.on('ready', () => {
 
 
 var loadSetup = function(event){
+  console.log('loadSetup');
 
   if(cornerWindow){
     cornerWindow.close();
@@ -113,23 +118,115 @@ var loadSetup = function(event){
 
 var start = function(event){
 
+  console.log('start');
+
   if(mainWindow){
     mainWindow.close();
   }
 
-  appIcon = new Tray( path.join( __dirname, '/images/gitty-icon-50.png' ));
+  appIcon = new Tray( path.join( __dirname, '/images/gitty-icon-20.png' ));
 
-   var contextMenu = Menu.buildFromTemplate([
+   var template = [
     {
       label: 'Show Repositories',
-      type: 'radio',
+      type: 'normal',
       click: function(item, focusedWindow){
         cornerWindow.show();
       }
     },
     {
+      label: 'Hide Repositories',
+      type: 'normal',
+      click: function(){
+        cornerWindow.hide();
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Sync Now',
+      type: 'normal',
+      click: function(item, focusedWindow){
+        refreshRepositories();
+      }
+    },
+    {
+      type: 'separator'
+    },
+
+    {
+      label: 'Update Repositories',
+      submenu: [
+        {
+          label: 'Every 5 Seconds',
+          type: 'checkbox',
+          click: function(event, index){
+            var interval = 5000;
+
+            console.log('every 5 ', this);
+            storage.set('updateInterval', interval, function(){
+              restartJob(interval);
+            });
+          },
+          value: 5000
+        },
+        {
+          label: 'Every 10 Seconds',
+          type: 'checkbox',
+          click: function(event, index){
+            var interval = 10000;
+            storage.set('updateInterval', interval, function(){
+              restartJob(interval);
+            });
+          },
+          value: 10000
+        },
+        {
+          label: 'Every 1 minute',
+          type: 'checkbox',
+          click: function(event, index){
+            var interval = 60000;
+            storage.set('updateInterval', interval, function(){
+              restartJob(interval);
+            });
+          },
+          value: 60000
+        },
+        {
+          label: 'Every 5 Minutes',
+          type: 'checkbox',
+          click: function(event, index){
+            storage.set('updateInterval', 300000);
+          },
+          value: 300000
+        },
+        {
+          label: 'Every 10 Minutes',
+          type: 'checkbox',
+          click: function(event, index){
+            storage.set('updateInterval', 600000);
+          },
+          value: 600000
+        },
+        {
+          label: 'Every 30 Minutes',
+          type: 'checkbox',
+          click: function(event, index){
+            storage.set('updateInterval', 1800000);
+          },
+          value: 1800000
+        }
+      ]
+
+    },
+
+    {
+      type: 'separator'
+    },
+    {
       label: 'Add Repositories',
-      type: 'radio',
+      type: 'normal',
       click: onAddRepository
     },
     {
@@ -200,16 +297,16 @@ var start = function(event){
       ]
     },
     {
-      label: 'Hide',
-      type: 'radio',
+      type: 'separator'
+    },
+    {
+      label: 'Quit',
+      type: 'normal',
       click: function(){
-        cornerWindow.hide();
+        app.quit();
       }
     },
-  ]);
-
-
-  appIcon.setContextMenu(contextMenu)
+  ];
 
   //create the corner window
   cornerWindow = new BrowserWindow({
@@ -226,7 +323,7 @@ var start = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    cornerWindow.openDevTools();
+    //cornerWindow.openDevTools();
   }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
   cornerWindow.setMenuBarVisibility(false);
@@ -243,17 +340,112 @@ var start = function(event){
     //cornerWindow.hide();
   })
 
+  storage.get('updateInterval', function(err,data){
+
+    var updateIndex;
+    var checkValue;
+    if(err) throw err;
+
+    console.log('starting menu with ', data);
+
+    if(data && _.isInteger(data)){
+      checkValue = data;
+    }else{
+      checkValue = 600000;
+    }
+    updateIndex = _.findIndex(template[5].submenu, {value: checkValue})
+
+    template[5].submenu[updateIndex].checked = true;
+    var contextMenu = Menu.buildFromTemplate(template);
+    appIcon.setContextMenu(contextMenu);
+  });
+
+
   storage.get('repositories', function(err,data){
     console.log('-- repositories');
 
     var paths = data;
     cornerWindow.setSize(650, calculateHeight(paths.length) );
     repoProcess.set(cornerWindow);
+
     job.set( repoProcess.run );
-    job.start(600000);
+
+    storage.get('updateInterval', function(err, data){
+      if(err) throw err;
+
+      startJob(data);
+    })
   });
 
 }
+/**
+ Starts a Job
+**/
+const startJob = function(data){
+  console.log('startJob', data);
+  console.log('----');
+  console.log('----');
+
+  var interval = _.isEmpty(data) ? 600000 : data;
+
+  console.log('starting job interval: ', interval);
+  job.start(data);
+}
+
+
+/**
+ Retarts a Job
+**/
+const restartJob = function(data){
+  console.log('restartJob');
+
+  job.stop();
+  job.start(data);
+}
+
+
+const refreshRepositories  = function(evt, index){
+  console.log('refreshRepositories');
+
+  if(repoProcess){
+
+    storage.get('repositories', function(err, data){
+      if(cornerWindow){
+        repoProcess.set(cornerWindow);
+
+        if(Array.isArray(data) && data.length){
+          cornerWindow.setSize(650, calculateHeight(data.length))
+        }
+      }
+      repoProcess.run(data || []);
+
+    })
+
+  }
+}
+
+const onAddRepository = function(event, index){
+  console.log('onAddRepository')
+  dialog.showOpenDialog({
+    properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
+  }, function(pathArray){
+    if(pathArray){
+      cornerWindow.webContents.send('addRepositories', pathArray);
+    }
+  });
+
+}
+
+const calculateHeight = function(numItems){
+  return numItems * ITEM_HEIGHT;
+}
+
+
+/**
+ * Called when we want to refresh repositories
+ */
+ipc.on('refreshRepositories', refreshRepositories);
+
 
 ipc.on('setup', loadSetup);
 
@@ -277,27 +469,6 @@ ipc.on('resizeCornerWindow', function(event){
 ipc.on('react-app-started', function(event, index){
 
 });
-
-
-/**
- * Called when we want to refresh repositories
- */
-ipc.on('refreshRepositories', function(evt, index){
-  console.log('--refreshRepositories');
-
-  if(repoProcess){
-
-    storage.get('repositories', function(err, data){
-      if(cornerWindow){
-        repoProcess.set(cornerWindow);
-        cornerWindow.setSize(650, calculateHeight(data.length))
-      }
-      repoProcess.run(data || []);
-
-    })
-
-  }
-})
 
 
 /**
@@ -330,21 +501,4 @@ ipc.on('openTerminal', function(event,path){
     if(err) throw err;
   });
 })
-
-
-
-const onAddRepository = function(event, index){
-  dialog.showOpenDialog({
-    properties: [ 'openFile', 'openDirectory', 'multiSelections' ]
-  }, function(pathArray){
-    if(pathArray){
-      cornerWindow.webContents.send('addRepositories', pathArray);
-    }
-  });
-
-}
-
-const calculateHeight = function(numItems){
-  return numItems * ITEM_HEIGHT;
-}
 
