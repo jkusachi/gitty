@@ -104,30 +104,22 @@ class RepositoryProcess {
 
   getIndividualStatus(repoPath, index){
 
-    try{
-      simpleGit( path.resolve(repoPath))
-      .fetch()
-      .status((err, status)=>{
-        if(err) throw err;
-        console.log('--Individual Status-------------------------');
-        console.log('Git Status for: ', repoPath);
-        console.log(status);
-        if(this.window){
-          this.window.webContents.send('statusUpdate', {
-            index: index,
-            status: status
-          });
-
-          this.window.webContents.send('makeClean', {
-            index: index
-          });
-        }
-      });
-    }
-    catch(err){
+    var self = this;
+    co(function *(){
+      var status = yield git.getStatus(repoPath);
+      if(self.window){
+        self.window.webContents.send('statusUpdate', {
+          index: index,
+          status: status
+        });
+        self.window.webContents.send('makeClean', {
+          index: index
+        });
+      }
+    })
+    .catch(err => {
       console.error('JOB ERROR', err.stack)
-    }
-
+    });
   }
 
   pullStorageIndex(pullIndex){
@@ -138,20 +130,24 @@ class RepositoryProcess {
 
         var pullPath = data[pullIndex];
         if(pullPath){
-          simpleGit(pullPath)
-          .pull(function(err, update){
-            console.log('updateeee')
-            console.log(update);;
 
-            if(update && update.summary.changes){
-              self.getIndividualStatus(pullPath, pullIndex)
-            }
-            else if(!update){
+          co(function *(){
+            console.log('pullPath ', pullPath);
+            var status = yield git.pullStatus(pullPath);
+
+            console.log('have a status', status);
+
+            self.getIndividualStatus(pullPath, pullIndex)
+          })
+          .catch((err) => {
+
+            if(err.includes('overwritten by merge')){
               self.window.webContents.send('makeDirty', {
                 index: pullIndex
-              })
+              });
             }
-          })
+
+          });
         }
       });
     }
