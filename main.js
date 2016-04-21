@@ -322,7 +322,7 @@ var start = function(event){
   });
 
   if (process.env.NODE_ENV === 'development') {
-    cornerWindow.openDevTools();
+    //cornerWindow.openDevTools();
   }
   cornerWindow.loadURL(`file://${__dirname}/app/app.html#repositories`);
   cornerWindow.setMenuBarVisibility(false);
@@ -370,6 +370,9 @@ var start = function(event){
 
 
       repoProcess.set(cornerWindow);
+
+      console.log('running ----');
+
       job.set( function(){
         repoProcess.run();
       });
@@ -385,7 +388,7 @@ var start = function(event){
 const startJob = function(data){
   console.log('----');
   console.log('startJob', data);
-  var interval = _.isEmpty(data) ? 600000 : data;
+  var interval = _.isNumber(data) ? 600000 : data;
 
   console.log('starting job interval: ', interval);
   job.start(data);

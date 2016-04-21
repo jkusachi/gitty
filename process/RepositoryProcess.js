@@ -8,12 +8,18 @@ var simpleGit = require('simple-git');
 
 var _ = require('lodash');
 
+var co = require('co');
+
+var git = require('../lib/git')
+var store = require('../lib/storage');
+
 function getElapsed(start, end){
 
   console.log('start -- ', start);
   console.log('end -- ', end);
   console.log(start);
   console.log(end);
+
   var timeDiff = end - start;
   // strip the ms
   timeDiff /= 1000;
@@ -34,7 +40,7 @@ function getElapsed(start, end){
 class RepositoryProcess {
 
   set(renderWindow){
-    console.log('RepositoryProcess::set', renderWindow);
+    console.log('RepositoryProcess::set');
     this.window = renderWindow || null;
   }
 
@@ -50,62 +56,49 @@ class RepositoryProcess {
     console.log(elapsed.minutes + ' minutes, ' + elapsed.seconds +' seconds since last ran');
 
     this.timer = now;
+    var self = this;
 
-      var self = this;
-      try{
-        storage.get('repositories', function(err, data){
-          if(err) throw err;
+    try{
 
-          console.log('--running with ', data.length , ' repos');
+      co(function *(){
+        var repositories = yield store.get('repositories');
+        return repositories;
+      })
+      .then( function(repositories){
 
-          _.map(data, (repoPath, index) => {
+        _.map(repositories, (repoPath, index) => {
+          if(!repoPath) return;
 
-            if(!repoPath) return;
-            try{
-              simpleGit( path.resolve(repoPath))
-              .fetch((err) => {
-                //catch invalid repos and set error
-                if(err && self.window){
-                  self.window.webContents.send('statusUpdate', {
-                    index: index,
-                    status: {
-                      isInvalid: true
-                    }
-                  });
-                  return Promise.reject('reject')
-                }
+          co(function *(){
 
-              })
-              .status((err, status)=>{
-                if(err) throw err;
-                console.log('--Status Retrieved -- for path ', repoPath);
-                //console.log('Git Status for: ', repoPath);
-                //console.log(status);
-                //send status update
+            var status = yield git.getStatus( repoPath  );
 
-                if(self.window){
-                  console.log('Updating window');
-                  self.window.webContents.send('statusUpdate', {
-                    index: index,
-                    status: status
-                  });
-                }else{
-                  console.log('no window');
-                }
-
-                return Promise.resolve(true);
+            if(self.window){
+              self.window.webContents.send('statusUpdate', {
+                index: index,
+                status: status
               });
             }
-            catch(err){
-              console.log('error ', err);
-            }
-          })
 
-        });
-      }
-      catch(err){
-        console.error('JOB ERROR', err.stack)
-      }
+          })
+          .catch( err => {
+            console.log('Invalid Repo for Index: ', index, ' with status: ', err);
+            if(self.window){
+              self.window.webContents.send('statusUpdate', {
+                index: index,
+                status: { isInvalid: true}
+              });
+            }
+          });
+
+        })
+      });
+
+    }
+    catch(err){
+      console.log('error - ', err);
+    }
+
 
   }
 

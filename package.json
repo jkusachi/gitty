@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.3",
+    "co": "^4.6.0",
     "css-modules-require-hook": "^3.0.0",
     "electron-json-storage": "^2.0.0",
     "electron-positioner": "^2.0.3",

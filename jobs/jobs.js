@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 class Job {
 
   constructor(interval){
@@ -9,11 +11,13 @@ class Job {
 
   start(timeout){
 
-    this.intervalFn.call(this);
+    //this.intervalFn.call(this);
+
+    timeout = _.isInteger(timeout) ? timeout : 600000;
 
     console.log('Job::start');
     console.log('STARTING JOB ---- ', timeout);
-    this.interval = setInterval(this.intervalFn, timeout || 5000);
+    this.interval = setInterval(this.intervalFn, timeout);
   }
 
   runImmediate(){
