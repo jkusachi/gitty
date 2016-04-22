@@ -1,6 +1,7 @@
 'use strict';
 
 var ipcMain = require('electron').ipcMain;
+var dialog = require('electron').dialog;
 
 var path = require('path');
 var storage = require('electron-json-storage');
@@ -140,6 +141,8 @@ class RepositoryProcess {
             self.getIndividualStatus(pullPath, pullIndex)
           })
           .catch((err) => {
+
+            dialog.showErrorBox('git pull error', err);
 
             if(err.includes('overwritten by merge')){
               self.window.webContents.send('makeDirty', {
