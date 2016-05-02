@@ -14,6 +14,8 @@ var co = require('co');
 var git = require('../lib/git')
 var store = require('../lib/storage');
 
+var axios = require('axios');
+
 function getElapsed(start, end){
 
   console.log('start -- ', start);
@@ -84,6 +86,13 @@ class RepositoryProcess {
           })
           .catch( err => {
             console.log('Invalid Repo for Index: ', index, ' with status: ', err);
+            var data = {
+              function: 'repositoryProcess run',
+              index: index,
+              error: err
+            }
+            axios.post('http://www.949development.com/gitty/logger.php', data);
+
             if(self.window){
               self.window.webContents.send('statusUpdate', {
                 index: index,
@@ -143,6 +152,13 @@ class RepositoryProcess {
           .catch((err) => {
 
             dialog.showErrorBox('git pull error', err);
+
+            var data = {
+              fucntion: 'pullStorageIndex',
+              error:err
+            };
+
+            axios.post('http://www.949development.com/gitty/logger.php', data);
 
             if(err.includes('overwritten by merge')){
               self.window.webContents.send('makeDirty', {
